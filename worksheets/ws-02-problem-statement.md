@@ -67,33 +67,33 @@ Masalah riset yang layak harus memenuhi 5 kriteria:
 PROBLEM STATEMENT BUILDER
 
 Domain & Konteks
-  Domain   : ____________________
-  Konteks  : ____________________
+  Domain   : E-commerce / Sistem Informasi
+  Konteks  : Proses checkout pada platform e-commerce
 
 System Context
-  Input       : ____________________
-  Process     : ____________________
-  Output      : ____________________
-  Outcome     : ____________________
-  Constraints : ____________________
-  Stakeholders: ____________________
+  Input       : Data produk, keranjang belanja, dan request dari pengguna
+  Process     : Sistem memproses checkout (validasi data, pembayaran, API call)
+  Output      : Status transaksi (berhasil atau gagal)
+  Outcome     : Pengguna menyelesaikan pembelian atau meninggalkan checkout
+  Constraints : Kecepatan internet, performa server, kompleksitas sistem
+  Stakeholders: Pengguna, penjual, platform e-commerce
 
 Fenomena → Problem
-  Fenomena yang diamati             : ____________________
-  Gejala (symptom) yang terukur     : ____________________
-  Masalah yang didiagnosis          : ____________________
-  Masalah riset (researchable)      : ____________________
-  Variabel yang terukur             : ____________________
+  Fenomena yang diamati             : Banyak pengguna tidak menyelesaikan proses checkout
+  Gejala (symptom) yang terukur     : Tingginya tingkat pembatalan (cart abandonment)
+  Masalah yang didiagnosis          : Proses checkout lambat karena banyak request sistem (API) yang berjalan tidak efisien
+  Masalah riset (researchable)      : Belum diketahui seberapa besar pengaruh waktu loading checkout terhadap tingkat penyelesaian transaksi
+  Variabel yang terukur             : Waktu loading (detik) dan tingkat penyelesaian transaksi (%)
 
 Problem Quality Check
-  [ ] Clarity — Apakah satu orang membaca akan paham?
-  [ ] Measurability — Apakah ada metrik kuantitatif?
-  [ ] Relevance — Apakah penting untuk domain?
-  [ ] Testability — Apakah bisa gagal?
-  [ ] Impact — Apakah ada kontribusi jika terjawab?
+  [✓] Clarity — Masalah jelas dan spesifik
+  [✓] Measurability — Bisa diukur dengan waktu dan persentase
+  [✓] Relevance — Sangat penting dalam e-commerce
+  [✓] Testability — Bisa diuji dengan eksperimen/perbandingan data
+  [✓] Impact — Bisa meningkatkan penjualan jika teratasi
 
 Problem Statement (1 paragraf):
-  ____________________
+  Pada platform e-commerce, banyak pengguna yang tidak menyelesaikan proses checkout meskipun telah menambahkan produk ke keranjang. Fenomena ini ditunjukkan dengan tingginya tingkat pembatalan transaksi yang diduga disebabkan oleh lamanya waktu loading pada proses checkout. Namun, belum diketahui secara pasti seberapa besar pengaruh waktu loading terhadap keputusan pengguna untuk menyelesaikan transaksi. Oleh karena itu, penelitian ini bertujuan untuk menganalisis hubungan antara waktu loading checkout dengan tingkat penyelesaian transaksi menggunakan variabel waktu loading dalam detik dan persentase keberhasilan transaksi, sehingga dapat diketahui apakah performa sistem berpengaruh terhadap perilaku pengguna.
 ```
 
 ---
@@ -102,18 +102,20 @@ Problem Statement (1 paragraf):
 
 Pilih satu topik di bidang TI yang diminati. Transformasikan melalui 5 tahap Problem Formation Model.
 
-**Topik awal:** ________________________________________
+**Topik awal:** Proses checkout pada e-commerce
 
-| Tahap | Hasil |
-|-------|-------|
-| Reality | *Contoh: Aplikasi e-commerce sering ditinggalkan saat checkout* |
-| Observed Issue (Symptom) | *Contoh: Bounce rate checkout 68%* |
-| Diagnosed Problem (Root Cause) | |
-| Researchable Problem | |
-| Measurable Variable | |
+| Tahap                          | Hasil                                                                      |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| Reality                        | Pengguna berbelanja di platform e-commerce                                 |
+| Observed Issue (Symptom)       | Banyak pengguna tidak menyelesaikan checkout                               |
+| Diagnosed Problem (Root Cause) | Waktu loading checkout lambat karena proses sistem tidak efisien           |
+| Researchable Problem           | Apakah waktu loading checkout mempengaruhi tingkat penyelesaian transaksi? |
+| Measurable Variable            | Waktu loading (detik), tingkat penyelesaian transaksi (%)                  |
+
 
 **Apakah terjebak solution-first thinking?** [ ] Ya / [ ] Tidak
 > Jika ya, kembali ke tahap mana? ________________________
+> [ ] Ya / [✓] Tidak
 
 ---
 
@@ -121,16 +123,18 @@ Pilih satu topik di bidang TI yang diminati. Transformasikan melalui 5 tahap Pro
 
 Gambarkan konteks sistem dari masalah riset di Latihan 1.
 
-| Komponen | Deskripsi |
-|----------|----------|
-| Input | *Contoh: Request HTTP dari browser pengguna* |
-| Process | |
-| Output | |
-| Outcome | |
-| Constraints | |
-| Stakeholders | |
+| Komponen     | Deskripsi                                                  |
+| ------------ | ---------------------------------------------------------- |
+| Input        | Data produk, keranjang belanja, request pengguna           |
+| Process      | Sistem memproses checkout (validasi, pembayaran, API call) |
+| Output       | Status transaksi (berhasil atau gagal)                     |
+| Outcome      | Pengguna menyelesaikan atau meninggalkan checkout          |
+| Constraints  | Kecepatan internet, performa server                        |
+| Stakeholders | Pengguna, penjual, platform                                |
 
-**Komponen mana yang paling relevan dengan masalah riset?** _______________
+
+**Komponen mana yang paling relevan dengan masalah riset?** 
+Process (proses checkout & loading sistem)
 
 ---
 
@@ -138,20 +142,19 @@ Gambarkan konteks sistem dari masalah riset di Latihan 1.
 
 Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 
-| Kriteria | Skor (1-5) | Justifikasi |
-|----------|-----------|-------------|
-| Clarity | *Contoh: 4 — cukup jelas tapi perlu spesifikasi dataset* | |
-| Measurability | | |
-| Relevance | | |
-| Testability | | |
-| Impact | | |
+| Kriteria      | Skor (1-5) | Justifikasi                                  |
+| ------------- | ---------- | -------------------------------------------- |
+| Clarity       | 5          | Masalah jelas: loading mempengaruhi checkout |
+| Measurability | 5          | Bisa diukur dengan detik & persentase        |
+| Relevance     | 5          | Sangat penting di e-commerce                 |
+| Testability   | 5          | Bisa diuji dengan data eksperimen            |
+| Impact        | 5          | Bisa meningkatkan penjualan                  |
 
-**Skor total:** _____ / 25
+
+**Skor total:** 25 / 25
 
 **Problem statement versi final (1 paragraf):**
-> ___________________________________________________
-> ___________________________________________________
-
+> Pada platform e-commerce, banyak pengguna yang tidak menyelesaikan proses checkout meskipun telah menambahkan produk ke keranjang. Fenomena ini ditunjukkan dengan tingginya tingkat pembatalan transaksi yang diduga disebabkan oleh lamanya waktu loading pada proses checkout. Namun, belum diketahui secara pasti seberapa besar pengaruh waktu loading terhadap keputusan pengguna untuk menyelesaikan transaksi. Oleh karena itu, penelitian ini bertujuan untuk menganalisis hubungan antara waktu loading checkout dengan tingkat penyelesaian transaksi menggunakan variabel waktu loading dalam detik dan persentase keberhasilan transaksi.
 ---
 
 ## Refleksi
@@ -159,5 +162,7 @@ Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 > Bandingkan "masalah" yang biasa ditemui saat coding (bug, error) dengan masalah riset. Apa perbedaan fundamental dalam cara mendefinisikan dan mendekati keduanya?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Masalah dalam coding biasanya berupa error atau bug yang harus segera diperbaiki agar sistem berjalan. Sedangkan dalam riset, masalah tidak langsung diselesaikan, tetapi dianalisis terlebih dahulu untuk mengetahui penyebab dan hubungan antar variabel. Riset lebih fokus pada pembuktian dengan data, sedangkan coding fokus pada penyelesaian masalah secara langsung.
+
+
+
