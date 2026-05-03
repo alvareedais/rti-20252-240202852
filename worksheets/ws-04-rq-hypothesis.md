@@ -67,35 +67,35 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 ```
 RQ-CONTRIBUTION-HYPOTHESIS
 
-Gap Statement  : ____________________
+Gap Statement  :
+Belum ada perbandingan yang jelas antara Collaborative Filtering dan Content-Based Filtering dalam meningkatkan akurasi rekomendasi produk pada e-commerce.
 
 Research Question:
-  Tipe         : [ ] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : ____________________
-  Variabel IV  : ____________________
-  Variabel DV  : ____________________
-  Metrik       : ____________________
-  Dataset      : ____________________
-  Baseline     : ____________________
+  Tipe         : [✓] Comparison  [ ] Improvement  [ ] Exploratory
+  Formulasi    : Apakah Collaborative Filtering menghasilkan akurasi, precision, dan recall yang lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce menggunakan dataset transaksi pengguna?
+  Variabel IV  : Jenis algoritma (Collaborative Filtering vs Content-Based Filtering)
+  Variabel DV  : Akurasi rekomendasi
+  Metrik       : Accuracy, Precision, Recall
+  Dataset      : Dataset transaksi pengguna e-commerce (Shopee/Tokopedia-like dataset)
+  Baseline     : Content-Based Filtering
 
 Quality Check RQ:
-  [ ] Variabel spesifik
-  [ ] Metrik jelas
-  [ ] Baseline ada
-  [ ] Konteks disebutkan
-  [ ] Memerlukan eksperimen (bukan hanya survei literatur)
+  [✓] Variabel spesifik
+  [✓] Metrik jelas
+  [✓] Baseline ada
+  [✓] Konteks disebutkan
+  [✓] Memerlukan eksperimen
 
 Contribution Statement:
-  Apa yang baru diketahui : ____________________
-  Jenis kontribusi        : [ ] Improvement  [ ] Comparison  [ ] Novel approach
-  Gap yang diisi          : ____________________
+  Apa yang baru diketahui : Mengetahui algoritma mana yang lebih optimal dalam meningkatkan akurasi rekomendasi produk pada e-commerce.
+  Jenis kontribusi        : [✓] Comparison  [ ] Improvement  [ ] Novel approach
+  Gap yang diisi          : Perbandingan performa antar algoritma rekomendasi yang belum dilakukan secara langsung
 
 Hypothesis Pair:
-  H₀ : ____________________
-  H₁ : ____________________
-  Threshold              : ____________________
-  Justifikasi threshold  : ____________________
-```
+  H₀ : Tidak terdapat perbedaan signifikan antara Collaborative Filtering dan Content-Based Filtering dalam menghasilkan akurasi, precision, dan recall pada sistem rekomendasi produk.
+  H₁ : Collaborative Filtering menghasilkan akurasi, precision, dan recall yang lebih tinggi dibandingkan Content-Based Filtering.
+  Threshold              : p-value < 0.05
+  Justifikasi threshold  : Nilai 0.05 merupakan standar umum dalam penelitian untuk menentukan signifikansi statistik.
 
 ---
 
@@ -103,10 +103,10 @@ Hypothesis Pair:
 
 Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
 
-**Gap dari WS-03:** ____________________________________
+**Gap dari WS-03:** Belum ada perbandingan langsung antara CF dan CBF dalam konteks e-commerce
 
 **RQ versi pertama (tulis bebas):**
-> ___________________________________________________
+> masih jelek (belum ada metrik, dataset)
 
 **Evaluasi RQ:**
 
@@ -120,7 +120,7 @@ Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
 **Tipe RQ:** [ ] Comparison / [ ] Improvement / [ ] Exploratory
 
 **RQ versi revisi (setelah evaluasi):**
-> ___________________________________________________
+> Apakah Collaborative Filtering menghasilkan akurasi, precision, dan recall yang lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce menggunakan dataset transaksi pengguna?
 
 ---
 
