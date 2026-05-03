@@ -67,8 +67,7 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 ```
 RQ-CONTRIBUTION-HYPOTHESIS
 
-Gap Statement  :
-Belum ada perbandingan yang jelas antara Collaborative Filtering dan Content-Based Filtering dalam meningkatkan akurasi rekomendasi produk pada e-commerce.
+Gap Statement  : Belum ada perbandingan yang jelas antara Collaborative Filtering dan Content-Based Filtering dalam meningkatkan akurasi rekomendasi produk pada e-commerce.
 
 Research Question:
   Tipe         : [✓] Comparison  [ ] Improvement  [ ] Exploratory
@@ -96,6 +95,7 @@ Hypothesis Pair:
   H₁ : Collaborative Filtering menghasilkan akurasi, precision, dan recall yang lebih tinggi dibandingkan Content-Based Filtering.
   Threshold              : p-value < 0.05
   Justifikasi threshold  : Nilai 0.05 merupakan standar umum dalam penelitian untuk menentukan signifikansi statistik.
+```
 
 ---
 
@@ -103,21 +103,22 @@ Hypothesis Pair:
 
 Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
 
-**Gap dari WS-03:** Belum ada perbandingan langsung antara CF dan CBF dalam konteks e-commerce
+**Gap dari WS-03:** Belum ada perbandingan langsung algoritma rekomendasi terhadap akurasi rekomendasi produk pada e-commerce.
 
 **RQ versi pertama (tulis bebas):**
-> masih jelek (belum ada metrik, dataset)
+> Algoritma mana yang lebih baik untuk rekomendasi produk?
 
 **Evaluasi RQ:**
 
-| Komponen | Ada? | Isi |
-|----------|------|-----|
-| Metode spesifik | *Contoh: Ya — CNN vs RF* | |
-| Metrik terukur | | |
-| Baseline | | |
-| Dataset/konteks | | |
+| Komponen        | Ada?  | Isi           |
+| --------------- | ----- | ------------- |
+| Metode spesifik | Tidak | Belum disebut |
+| Metrik terukur  | Tidak | Belum ada     |
+| Baseline        | Tidak | Belum ada     |
+| Dataset/konteks | Tidak | Belum jelas   |
 
-**Tipe RQ:** [ ] Comparison / [ ] Improvement / [ ] Exploratory
+
+**Tipe RQ:** [✓] Comparison / [ ] Improvement / [ ] Exploratory
 
 **RQ versi revisi (setelah evaluasi):**
 > Apakah Collaborative Filtering menghasilkan akurasi, precision, dan recall yang lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce menggunakan dataset transaksi pengguna?
@@ -128,16 +129,17 @@ Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
 
 Rumuskan pasangan hipotesis dari RQ di Latihan 1.
 
-| Komponen | Isi |
-|----------|-----|
-| H₀ | *Contoh: Tidak ada perbedaan signifikan F1-Score antara CNN dan RF pada dataset CIC-MalMem-2022* |
-| H₁ | |
-| Metrik | |
-| Threshold | |
-| Justifikasi threshold | |
+| Komponen              | Isi                                                                   |
+| --------------------- | --------------------------------------------------------------------- |
+| H₀                    | Tidak ada perbedaan signifikan precision dan recall antara CF dan CBF |
+| H₁                    | CF memiliki precision dan recall lebih tinggi                         |
+| Metrik                | Precision, Recall                                                     |
+| Threshold             | 0.05                                                                  |
+| Justifikasi threshold | Standar penelitian statistik                                          |
 
-**Apakah hipotesis ini falsifiable?** [ ] Ya / [ ] Tidak
-> Bagaimana cara membuktikannya salah? ___________________
+
+**Apakah hipotesis ini falsifiable?** [✓] Ya / [ ] Tidak
+> Bagaimana cara membuktikannya salah? Jika hasil uji statistik menunjukkan p-value > 0.05, maka H₀ tidak dapat ditolak, yang berarti tidak ada bukti cukup untuk mendukung H₁. Jika p-value < 0.05, maka H₀ ditolak, mendukung H₁ bahwa CF lebih baik dari CBF.
 
 ---
 
@@ -145,24 +147,24 @@ Rumuskan pasangan hipotesis dari RQ di Latihan 1.
 
 Lengkapi rantai dari RQ hingga metode analisis.
 
-| Tahap | Isi |
-|-------|-----|
-| RQ | *Contoh: Apakah CNN menghasilkan F1-Score lebih tinggi dari RF...* |
-| Variable (IV) | *Contoh: Jenis algoritma (CNN vs RF)* |
-| Variable (DV) | |
-| Metric | |
-| Data source | |
-| Analysis method | |
+| Tahap           | Isi                                                     |
+| --------------- | ------------------------------------------------------- |
+| RQ              | Apakah CF lebih baik dari CBF dalam precision & recall? |
+| Variable (IV)   | Jenis algoritma (CF vs CBF)                             |
+| Variable (DV)   | Akurasi rekomendasi                                     |
+| Metric          | Precision, Recall, F1-Score                             |
+| Data source     | Dataset interaksi pengguna e-commerce                   |
+| Analysis method | Uji statistik (t-test / perbandingan mean)              |
 
-**Apakah rantai lengkap?** [ ] Ya / [ ] Tidak
-> Jika tidak, tahap mana yang perlu direvisi? ______________
 
+**Apakah rantai lengkap?** [✓] Ya / [ ] Tidak
+> Jika tidak, tahap mana yang perlu direvisi?  karena seluruh komponen dari RQ hingga metode analisis telah terdefinisi secara jelas dan dapat diuji secara empiris.
 ---
 
 ## Refleksi
 
 > Ambil satu judul skripsi/paper yang pernah dibaca. Coba ekstrak RQ-nya. Apakah RQ tersebut memenuhi semua komponen (metode, metrik, baseline, konteks)? Jika tidak, apa yang hilang?
 
-**Judul:** _____________________________________________
-**RQ yang diekstrak:** __________________________________
-**Komponen yang hilang:** _______________________________
+**Judul:** Sistem Rekomendasi Produk Menggunakan Collaborative Filtering
+**RQ yang diekstrak:** Apakah Collaborative Filtering efektif dalam rekomendasi produk?
+**Komponen yang hilang:** Metrik, baseline, dan dataset tidak disebutkan secara jelas
