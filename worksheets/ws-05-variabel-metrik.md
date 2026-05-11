@@ -66,19 +66,28 @@ Metrik harus ditentukan **sebelum** eksperimen. Memilih metrik setelah melihat d
 ```
 VARIABLE & METRIC DEFINITION
 
-Research Question: ____________________
+Research Question: Apakah Collaborative Filtering menghasilkan precision dan recall lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce?
 
-| Variabel | Tipe | Konsep | Metrik | Skala | Satuan | Cara Mengukur | Justifikasi |
-|----------|------|--------|--------|-------|--------|---------------|-------------|
-|          | IV   |        |        |       |        |               |             |
-|          | DV   |        |        |       |        |               |             |
-|          | CV   |        |        |       |        |               |             |
+| Variabel            | Tipe | Konsep                        | Metrik                      | Skala   | Satuan     | Cara Mengukur                         | Justifikasi                      |
+| ------------------- | ---- | ----------------------------- | --------------------------- | ------- | ---------- | ------------------------------------- | -------------------------------- |
+| Jenis algoritma     | IV   | Pendekatan sistem rekomendasi | CF vs CBF                   | Nominal | —          | Menentukan model yang digunakan       | Variabel utama yang dibandingkan |
+| Akurasi rekomendasi | DV   | Kualitas rekomendasi          | Precision, Recall, F1-Score | Ratio   | %          | Bandingkan rekomendasi vs data aktual | Mewakili performa sistem         |
+| Dataset             | CV   | Sumber data                   | Dataset yang sama           | Nominal | —          | Gunakan dataset identik               | Menghindari bias                 |
+| Jumlah data         | CV   | Ukuran dataset                | Jumlah user & item          | Ratio   | Data count | Menyamakan jumlah data                | Menjaga fairness                 |
+| Parameter model     | CV   | Setting model                 | Hyperparameter tetap        | Nominal | —          | Set nilai tetap                       | Agar hasil valid                 |
+
 
 Alignment Check:
   RQ → Concept → Variable → Metric → Data → Result
-  [ ] Setiap langkah terdokumentasi
-  [ ] Tidak ada "lompatan logis"
-  [ ] Metrik mengukur apa yang dimaksud (construct validity)
+    ✔ Problem: Rekomendasi tidak akurat
+    ✔ Concept: Akurasi rekomendasi
+    ✔ Variable: Precision, Recall
+    ✔ Metric: Nilai % precision & recall
+    ✔ Data: Dataset interaksi user
+    ✔ Result: Perbandingan performa CF vs CBF
+  [✓]Setiap langkah terdokumentasi
+  [✓]Tidak ada "lompatan logis"
+  [✓]Metrik mengukur apa yang dimaksud (construct validity)
 ```
 
 ---
@@ -87,15 +96,16 @@ Alignment Check:
 
 Gunakan RQ dari WS-04. Definisikan variabel dan metriknya.
 
-**RQ:** __________________________________________________
+**RQ:** Apakah Collaborative Filtering lebih baik dari Content-Based Filtering dalam precision & recall?
 
-| Variabel | Tipe | Konsep Abstrak | Metrik Konkret | Skala (NOIR) | Satuan |
-|----------|------|---------------|----------------|-------------|--------|
-| *Contoh: Jenis model* | *IV* | *Pendekatan klasifikasi* | *Categorical: CNN vs RF* | *Nominal* | *—* |
-| | DV | | | | |
-| | CV | | | | |
+| Variabel        | Tipe | Konsep Abstrak       | Metrik Konkret        | Skala (NOIR) | Satuan |
+| --------------- | ---- | -------------------- | --------------------- | ------------ | ------ |
+| Jenis algoritma | IV   | Metode rekomendasi   | CF vs CBF             | Nominal      | —      |
+| Akurasi         | DV   | Kualitas rekomendasi | Precision, Recall, F1 | Ratio        | %      |
+| Dataset         | CV   | Data uji             | Dataset user-item     | Nominal      | —      |
 
-**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [ ] Tidak
+
+**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [✓] Tidak
 > Jika ya, di mana? ____________________________________
 
 ---
@@ -104,17 +114,18 @@ Gunakan RQ dari WS-04. Definisikan variabel dan metriknya.
 
 Evaluasi metrik DV yang dipilih di Latihan 1 menggunakan 3 kriteria.
 
-| Kriteria | Skor (1-5) | Justifikasi |
-|----------|-----------|-------------|
-| Representative | *Contoh: 4 — F1-Score mewakili keseimbangan precision-recall* | |
-| Sensitive | | |
-| Feasible | | |
+| Kriteria       | Skor (1-5) | Justifikasi                                                |
+| -------------- | ---------- | ---------------------------------------------------------- |
+| Representative | 5          | Precision & Recall langsung mengukur relevansi rekomendasi |
+| Sensitive      | 4          | Bisa membedakan performa model                             |
+| Feasible       | 5          | Mudah dihitung dari data                                   |
 
-**Apakah perlu secondary metric?** [ ] Ya / [ ] Tidak
-> Jika ya, apa dan mengapa? _____________________________
+
+**Apakah perlu secondary metric?** [✓] Ya / [ ] Tidak
+> Jika ya, apa dan mengapa? __Secondary metric: F1-Score dan Waktu komputasi, Kenapa? karena F1 = gabungan precision & recall dan Waktu komputasi = efisiensi sistem
 
 **Contoh kasus ceiling effect untuk metrik ini:**
-> ___________________________________________________
+> Jika semua model menghasilkan precision di atas 95%, maka sulit membedakan performa karena semua terlihat “bagus”
 
 ---
 
@@ -122,12 +133,13 @@ Evaluasi metrik DV yang dipilih di Latihan 1 menggunakan 3 kriteria.
 
 Bayangkan data yang akan dikumpulkan dari eksperimen. Evaluasi 4 dimensi kualitas data.
 
-| Dimensi | Pertanyaan | Jawaban | Strategi Mitigasi |
-|---------|-----------|---------|------------------|
-| Completeness | *Apakah semua data point terkumpul?* | | |
-| Consistency | *Apakah ada kontradiksi internal?* | | |
-| Validity | *Apakah benar-benar mengukur yang dimaksud?* | | |
-| Representativeness | *Apakah sampel mewakili populasi target?* | | |
+| Dimensi            | Pertanyaan                   | Jawaban      | Strategi Mitigasi      |
+| ------------------ | ---------------------------- | ------------ | ---------------------- |
+| Completeness       | Apakah semua data terkumpul? | Tidak selalu | Bersihkan missing data |
+| Consistency        | Apakah ada kontradiksi?      | Bisa ada     | Validasi dataset       |
+| Validity           | Apakah sesuai konsep?        | Ya           | Gunakan data real user |
+| Representativeness | Apakah mewakili user?        | Belum tentu  | Gunakan data beragam   |
+
 
 ---
 
@@ -136,5 +148,5 @@ Bayangkan data yang akan dikumpulkan dari eksperimen. Evaluasi 4 dimensi kualita
 > Mengapa memilih metrik setelah melihat data dianggap p-hacking? Apa bedanya dengan eksplorasi data yang sah?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Memilih metrik setelah melihat data disebut p-hacking karena peneliti bisa memilih metrik yang menguntungkan hasil, sehingga tidak objektif. 
+> Berbeda dengan eksplorasi data yang sah, eksplorasi dilakukan setelah analisis utama dan dilaporkan sebagai temuan tambahan, bukan untuk mendukung hipotesis utama.
