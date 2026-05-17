@@ -67,25 +67,28 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 ```
 SYSTEM-EXPERIMENT MAPPING
 
-Research Question: ____________________
+Research Question:
+Apakah Collaborative Filtering menghasilkan precision dan recall lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce?
 
-Variable → Component Mapping:
-| Variabel | Tipe | Komponen Sistem | Cara Manipulasi/Pengukuran |
-|----------|------|-----------------|---------------------------|
-|          | IV   |                 |                           |
-|          | DV   |                 |                           |
-|          | CV   |                 |                           |
+| Variabel                    | Tipe | Komponen Sistem       | Cara Manipulasi / Pengukuran                  |
+| --------------------------- | ---- | --------------------- | --------------------------------------------- |
+| Jenis algoritma (CF vs CBF) | IV   | Recommendation Engine | Mengganti parameter `algorithm_type`          |
+| Precision & Recall          | DV   | Evaluation Module     | Sistem otomatis menghitung precision & recall |
+| Dataset pengguna            | CV   | Dataset Loader        | Menggunakan dataset yang sama                 |
+| Jumlah data train/test      | CV   | Experiment Controller | Split data dibuat tetap                       |
+| Hyperparameter              | CV   | Configuration File    | Parameter dikunci di config                   |
+
 
 4 Prinsip Desain:
-  [ ] Traceability — Setiap komponen bisa ditelusuri ke variabel
-  [ ] Variable Isolation — IV bisa diubah tanpa mengubah CV
-  [ ] Measurement Integration — Pengukuran DV built-in
-  [ ] Reproducibility — Setup bisa direkonstruksi
+  [✓] Traceability — Setiap komponen bisa ditelusuri ke variabel
+  [✓] Variable Isolation — IV bisa diubah tanpa mengubah CV
+  [✓] Measurement Integration — Pengukuran DV built-in
+  [✓] Reproducibility — Setup bisa direkonstruksi
 
 Experimental Setup:
-  Input data     : ____________________
-  Parameter      : ____________________
-  Output format  : ____________________
+  Input data     : Dataset interaksi pengguna e-commerce
+  Parameter      : Jenis algoritma, train-test split, hyperparameter
+  Output format  : Precision & Recall
 ```
 
 ---
@@ -94,15 +97,17 @@ Experimental Setup:
 
 Gunakan RQ dan variabel dari WS-05. Petakan ke komponen sistem.
 
-**RQ:** __________________________________________________
+**RQ:** Apakah Collaborative Filtering menghasilkan precision dan recall lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce?
 
-| Variabel | Tipe | Komponen Sistem | Cara Manipulasi / Pengukuran |
-|----------|------|-----------------|---------------------------|
-| *Contoh: Jenis model* | *IV* | *Modul classifier (swap RF ↔ CNN)* | *Ganti config `model_type`* |
-| | DV | | |
-| | CV | | |
+| Variabel           | Tipe | Komponen Sistem       | Cara Manipulasi / Pengukuran |
+| ------------------ | ---- | --------------------- | ---------------------------- |
+| Jenis algoritma    | IV   | Recommendation Engine | Mengganti algoritma CF ↔ CBF |
+| Precision & Recall | DV   | Evaluation Module     | Perhitungan otomatis         |
+| Dataset            | CV   | Dataset Loader        | Dataset dibuat sama          |
+| Hyperparameter     | CV   | Config File           | Nilai parameter dikunci      |
 
-**Apakah semua variabel bisa di-map?** [ ] Ya / [ ] Tidak
+
+**Apakah semua variabel bisa di-map?** [✓] Ya / [ ] Tidak
 > Jika tidak, komponen apa yang perlu ditambahkan? _________
 
 ---
@@ -111,16 +116,17 @@ Gunakan RQ dan variabel dari WS-05. Petakan ke komponen sistem.
 
 Evaluasi desain sistem terhadap 4 prinsip.
 
-| Prinsip | Status | Bukti / Penjelasan |
-|---------|--------|-------------------|
-| Traceability | *Contoh: ✅ — setiap modul punya label variabel* | |
-| Modularity | | |
-| Controllability | | |
-| Measurability | | |
+| Prinsip         | Status | Bukti / Penjelasan           |
+| --------------- | ------ | ---------------------------- |
+| Traceability    | ✅      | Semua modul terkait variabel |
+| Modularity      | ✅      | Algoritma dapat diganti      |
+| Controllability | ✅      | Parameter di config file     |
+| Measurability   | ✅      | Metrik dihitung otomatis     |
 
-**Prinsip mana yang paling sulit dipenuhi?** _______________
+
+**Prinsip mana yang paling sulit dipenuhi?** Variable Isolation
 **Strategi untuk mengatasinya:**
-> ___________________________________________________
+> Menggunakan dataset, preprocessing, dan parameter yang sama agar hanya algoritma yang berubah saat eksperimen dilakukan
 
 ---
 
@@ -128,16 +134,17 @@ Evaluasi desain sistem terhadap 4 prinsip.
 
 Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 
-| Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
-|---------|-----------|-----------|-----------|----------------------|
-| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
-| – A | ❌ (ganti RF) | ✅ | ✅ | |
-| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
-| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
+| Kondisi | Komponen A (CF) | Komponen B (Preprocessing) | Komponen C (Evaluation) | Hasil yang Diharapkan    |
+| ------- | --------------- | -------------------------- | ----------------------- | ------------------------ |
+| Full    | ✅               | ✅                          | ✅                       | Hasil terbaik            |
+| – A     | ❌ (CBF)         | ✅                          | ✅                       | Precision menurun        |
+| – B     | ✅               | ❌                          | ✅                       | Data kurang optimal      |
+| – C     | ✅               | ✅                          | ❌                       | Tidak ada evaluasi valid |
 
-**Komponen mana yang diprediksi paling berkontribusi?** _____
+
+**Komponen mana yang diprediksi paling berkontribusi?** Recommendation Engine (algoritma rekomendasi)
 **Mengapa?**
-> ___________________________________________________
+> Karena algoritma menentukan bagaimana sistem memprediksi preferensi pengguna sehingga sangat mempengaruhi precision dan recall.
 
 ---
 
@@ -146,5 +153,5 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 > Apa risiko jika sistem dibangun seperti produk (monolitik, fitur lengkap) lalu baru dilakukan eksperimen? Mengapa arsitektur modular penting untuk riset?
 
 **Jawaban:**
-> ___________________________________________________
+> Jika sistem dibangun seperti produk monolitik dengan banyak fitur, maka eksperimen akan sulit dilakukan karena perubahan satu komponen dapat mempengaruhi komponen lain. Arsitektur modular penting dalam riset karena memudahkan isolasi variabel, penggantian komponen, dan reproduksi eksperimen secara adil dan terkontrol.
 > ___________________________________________________
