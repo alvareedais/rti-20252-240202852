@@ -68,36 +68,42 @@ Ancaman validitas harus diidentifikasi **sebelum** eksperimen dan mitigasinya di
 ```
 EXPERIMENT DESIGN
 
-Research Question : ____________________
-Hypothesis        : ____________________
-Tipe Eksperimen   : [ ] Comparison  [ ] Ablation  [ ] Parameter
+Research Question :
+Apakah Collaborative Filtering menghasilkan precision dan recall lebih tinggi dibandingkan Content-Based Filtering pada sistem rekomendasi produk e-commerce?
 
-Kondisi Eksperimen:
-| Kondisi | Deskripsi | IV Value | CV Settings |
-|---------|-----------|----------|-------------|
-| Control |           |          |             |
-| Treatment |         |          |             |
+Hypothesis :
+H₁ : Collaborative Filtering memiliki precision dan recall lebih tinggi dibandingkan Content-Based Filtering.
+
+Tipe Eksperimen :
+[✓] Comparison  [ ] Ablation  [ ] Parameter
+
+| Kondisi   | Deskripsi                   | IV Value                | CV Settings                                                    |
+| --------- | --------------------------- | ----------------------- | -------------------------------------------------------------- |
+| Control   | Baseline metode rekomendasi | Content-Based Filtering | Dataset sama, preprocessing sama, split 80:20, parameter tetap |
+| Treatment | Metode yang diuji           | Collaborative Filtering | Dataset sama, preprocessing sama, split 80:20, parameter tetap |
+
 
 Fairness Checklist:
-  [ ] Dataset identik untuk semua kondisi
-  [ ] Preprocessing setara
-  [ ] Tuning effort setara
-  [ ] Environment identik
-  [ ] Metrik evaluasi sama
+  [✓] Dataset identik untuk semua kondisi
+  [✓] Preprocessing setara
+  [✓] Tuning effort setara
+  [✓] Environment identik
+  [✓] Metrik evaluasi sama
 
 Threat Analysis:
-| Threat Type | Ancaman Spesifik | Mitigasi |
-|-------------|-----------------|----------|
-| Internal    |                 |          |
-| External    |                 |          |
-| Construct   |                 |          |
-| Conclusion  |                 |          |
+| Threat Type | Ancaman Spesifik                                         | Mitigasi                                        |
+| ----------- | -------------------------------------------------------- | ----------------------------------------------- |
+| Internal    | Data leakage antara train dan test                       | Menggunakan train-test split yang konsisten     |
+| External    | Dataset hanya berasal dari satu jenis marketplace        | Menggunakan data dengan variasi produk dan user |
+| Construct   | Precision saja tidak cukup mengukur kualitas rekomendasi | Menambahkan Recall dan F1-Score                 |
+| Conclusion  | Jumlah data terlalu sedikit                              | Menggunakan dataset dengan ukuran memadai       |
+
 
 Statistical Plan:
-  Uji statistik   : ____________________
-  Justifikasi      : ____________________
-  Alpha            : ____________________
-  Effect size min  : ____________________
+  Uji statistik   : Independent t-test
+  Justifikasi      : Membandingkan rata-rata performa dua metode
+  Alpha            : 0.05
+  Effect size min  : 0.2
 ```
 
 ---
@@ -106,13 +112,15 @@ Statistical Plan:
 
 Susun desain eksperimen berdasarkan RQ, variabel, dan sistem dari WS-04 sampai WS-06.
 
-**RQ:** __________________________________________________
-**Tipe eksperimen:** [ ] Comparison / [ ] Ablation / [ ] Parameter
+**RQ:** Apakah Collaborative Filtering menghasilkan precision dan recall lebih tinggi dibandingkan Content-Based Filtering?
 
-| Kondisi | Deskripsi | IV Value | CV Settings |
-|---------|-----------|----------|-------------|
-| Control | *Contoh: RF baseline dari literatur* | *RF* | *Dataset X, 80:20 split, seed 42* |
-| Treatment | | | |
+**Tipe eksperimen:** [✓] Comparison / [ ] Ablation / [ ] Parameter
+
+| Kondisi   | Deskripsi            | IV Value | CV Settings                      |
+| --------- | -------------------- | -------- | -------------------------------- |
+| Control   | Baseline rekomendasi | CBF      | Dataset sama, preprocessing sama |
+| Treatment | Algoritma utama      | CF       | Dataset sama, preprocessing sama |
+
 
 ---
 
@@ -120,15 +128,16 @@ Susun desain eksperimen berdasarkan RQ, variabel, dan sistem dari WS-04 sampai W
 
 Evaluasi apakah desain eksperimen di Latihan 1 sudah fair.
 
-| Kriteria | Status | Detail |
-|----------|--------|--------|
-| Dataset identik | *Contoh: ✅ — sama-sama pakai CIC-MalMem-2022* | |
-| Preprocessing setara | | |
-| Tuning effort setara | | |
-| Environment identik | | |
-| Metrik evaluasi sama | | |
+| Kriteria             | Status | Detail                               |
+| -------------------- | ------ | ------------------------------------ |
+| Dataset identik      | ✅      | Dataset yang sama digunakan          |
+| Preprocessing setara | ✅      | Cleaning & transformasi sama         |
+| Tuning effort setara | ✅      | Parameter dituning dengan usaha sama |
+| Environment identik  | ✅      | Hardware & software sama             |
+| Metrik evaluasi sama | ✅      | Precision, Recall, F1 sama           |
 
-**Ada yang tidak fair?** [ ] Ya / [ ] Tidak
+
+**Ada yang tidak fair?** [ ] Ya / [✓] Tidak
 > Jika ya, bagaimana cara memperbaikinya? ________________
 
 ---
@@ -137,16 +146,18 @@ Evaluasi apakah desain eksperimen di Latihan 1 sudah fair.
 
 Identifikasi ancaman validitas untuk desain eksperimen ini.
 
-| Threat Type | Ancaman Spesifik | Mitigasi |
-|-------------|-----------------|----------|
-| Internal | *Contoh: Data leakage antara train-test* | *Contoh: Gunakan stratified split, validasi tidak ada overlap* |
-| External | | |
-| Construct | | |
-| Conclusion | | |
+| Threat Type | Ancaman Spesifik                  | Mitigasi              |
+| ----------- | --------------------------------- | --------------------- |
+| Internal    | Overlap data train-test           | Gunakan split tetap   |
+| External    | Dataset tidak mewakili semua user | Gunakan data beragam  |
+| Construct   | Precision tidak cukup             | Tambahkan Recall & F1 |
+| Conclusion  | Sample size kecil                 | Tambahkan jumlah data |
 
-**Ancaman mana yang paling sulit dimitigasi?** _____________
+
+**Ancaman mana yang paling sulit dimitigasi?** External validity
+
 **Mengapa?**
-> ___________________________________________________
+> Karena perilaku pengguna e-commerce sangat beragam sehingga sulit membuat dataset yang benar-benar mewakili seluruh pengguna marketplace seperti Shopee dan Tokopedia.
 
 ---
 
@@ -155,6 +166,6 @@ Identifikasi ancaman validitas untuk desain eksperimen ini.
 > Sebuah paper melaporkan "metode kami mengalahkan semua baseline." Apa 3 pertanyaan pertama yang harus diajukan untuk mengevaluasi klaim ini?
 
 **Jawaban:**
-1. ___________________________________________________
-2. ___________________________________________________
-3. ___________________________________________________
+1. Apakah semua metode diuji menggunakan dataset dan preprocessing yang sama?
+2. Apakah baseline yang digunakan benar-benar relevan dan representatif?
+3. Apakah perbedaan hasil terbukti signifikan secara statistik?
