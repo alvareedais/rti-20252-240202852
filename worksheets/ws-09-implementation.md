@@ -63,15 +63,15 @@ Capai **repeatability** dulu, baru **reproducibility**.
 EXPERIMENT SETUP DOCUMENTATION
 
 Hardware:
-  CPU     : ____________________
-  RAM     : ____________________
-  GPU     : ____________________
-  Storage : ____________________
+  CPU     : Intel Core i5 / AMD Ryzen 5 atau setara
+  RAM     : 8gb 
+  GPU     : tidak digunakan (CPU-only)
+  Storage : ssd 256
 
 Software:
-  OS        : ____________________
-  Runtime   : ____________________
-  Framework : ____________________
+  OS        : windows 11 64-bit
+  Runtime   : python 3.11
+  Framework : Scikit-learn
 
 Dependencies:
 | Library | Version | Sumber | Hash/Checksum |
