@@ -9,7 +9,7 @@
 ### Proposal = Satu Argumen Utuh
 
 Proposal riset bukan kumpulan bab yang independen. Ia adalah **satu argumen** yang mengalir dari masalah ke rencana solusi. Jika satu koneksi putus, seluruh proposal kehilangan koherensi.
-
+ 
 ### Integration Map — 6 Koneksi Kritis
 
 ```
