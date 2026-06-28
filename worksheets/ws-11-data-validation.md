@@ -89,7 +89,7 @@ Cross-Validation:
 Keputusan:
   [ ] Data siap analisis
   [ ] Perlu cleaning
-  [ ] Perlu re-run (skenario: ____)
+  [✓] Perlu re-run (skenario: ____)
 ```
 
 ---
@@ -98,17 +98,16 @@ Keputusan:
 
 Verifikasi apakah semua data yang direncanakan sudah terkumpul.
 
-| Skenario | Run Direncanakan | Run Tercatat | Missing | Alasan |
-|----------|-----------------|-------------|---------|--------|
-| *Contoh: BERT, DS-1* | *10* | *10* | *0* | *—* |
-| *LSTM, DS-3* | *10* | *8* | *2* | *OOM pada run 7 & 9* |
-| | | | | |
-| | | | | |
+| Skenario                | Run Direncanakan | Run Tercatat | Missing | Alasan                      |
+| ----------------------- | ---------------- | ------------ | ------- | --------------------------- |
+| Collaborative Filtering | 3                | 0            | 3       | Eksperimen belum dijalankan |
+| Content-Based Filtering | 3                | 0            | 3       | Eksperimen belum dijalankan |
 
-**Total expected:** ____ | **Total actual:** ____ | **Missing:** ____
+
+**Total expected:** 6 | **Total actual:** 0 | **Missing:** 6
 
 **Keputusan untuk data missing:**
-> ___________________________________________________
+> Seluruh data akan dikumpulkan setelah eksperimen dijalankan sesuai execution plan. Belum dilakukan penghapusan maupun imputasi data.
 
 ---
 
@@ -127,16 +126,16 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 | 5 | *91.0* |
 
 **Deteksi outlier:**
-- Q1 = ____ | Q3 = ____ | IQR = ____
-- Batas bawah (Q1 - 1.5×IQR) = ____
-- Batas atas (Q3 + 1.5×IQR) = ____
-- Outlier terdeteksi: ____
+- Q1 = Belum  | Q3 = Belum  | IQR = Belum 
+- Batas bawah (Q1 - 1.5×IQR) = Belum 
+- Batas atas (Q3 + 1.5×IQR) = Belum 
+- Outlier terdeteksi: Belum 
 
 **Investigasi (untuk setiap outlier):**
 
-| Outlier | Nilai | Kemungkinan Penyebab | Keputusan |
-|---------|-------|---------------------|-----------|
-| *Run 4* | *78.3* | *Contoh: thermal throttling setelah 3 run berturut* | *Re-run dengan cooling interval* |
+| Outlier   | Nilai | Kemungkinan Penyebab          | Keputusan                                              |
+| --------- | ----- | ----------------------------- | ------------------------------------------------------ |
+| Belum ada | -     | Eksperimen belum dilaksanakan | Analisis akan dilakukan setelah seluruh data terkumpul |
 
 ---
 
@@ -144,12 +143,12 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 
 Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
-**1. Completeness:** ____% data terkumpul
-**2. Format:** [ ] Konsisten / [ ] Ada inkonsistensi: ____
+**1. Completeness:** 0% data terkumpul
+**2. Format:** [✓] Konsisten / [ ] Ada inkonsistensi: ____
 **3. Range check (anomali):** ____
-**4. Logic check:** [ ] Parameter sesuai plan / [ ] Ada ketidaksesuaian: ____
+**4. Logic check:** [✓] Parameter sesuai plan / [ ] Ada ketidaksesuaian: ____
 
-**Kesimpulan:** [ ] Data siap analisis / [ ] Perlu tindakan: ____
+**Kesimpulan:** [x] Data siap analisis / [✓] Perlu tindakan: proses eksperimen dan pengumpulan data belum dilakukan.
 
 ---
 
@@ -157,5 +156,5 @@ Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
 > Apa perbedaan antara "data yang benar" dan "data yang dipercaya"? Mengapa proses validasi formal diperlukan meskipun data dikumpulkan secara otomatis?
 
-> ___________________________________________________
+> Data yang benar adalah data yang berhasil dicatat oleh sistem, sedangkan data yang dipercaya adalah data yang telah melalui proses validasi sehingga diyakini akurat, konsisten, lengkap, dan sesuai dengan desain eksperimen. Walaupun data dikumpulkan secara otomatis, kesalahan seperti data hilang, format yang tidak konsisten, atau bug pada proses pencatatan masih dapat terjadi. Oleh karena itu, validasi formal diperlukan agar hasil analisis dan kesimpulan penelitian dapat dipertanggungjawabkan secara ilmiah.
 > ___________________________________________________
