@@ -192,7 +192,7 @@ PREPROCESSING SUMMARY
 
 7. Leakage Check
    [✓] Lulus
-```
+``` 
 
 ---
 
