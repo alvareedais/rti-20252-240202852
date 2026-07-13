@@ -106,10 +106,10 @@ Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya da
 
 
 **Checklist tabel:**
-- [ ] Self-contained (judul jelas, satuan ada, N tercantum)
-- [ ] Mean ± std (bukan single number)
-- [ ] Diurutkan berdasarkan metrik utama
-- [ ] Format konsisten di semua baris
+- [✓] Self-contained (judul jelas, satuan ada, N tercantum)
+- [✓] Mean ± std
+- [✓] Diurutkan berdasarkan Accuracy
+- [✓] Format konsisten
 
 ---
 
@@ -117,11 +117,11 @@ Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya da
 
 Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu pesan.
 
-| # | Jenis Grafik | Pesan | Data yang Digunakan |
-|---|-------------|-------|---------------------|
-| 1 | *Contoh: Bar chart + error bar* | *Perbandingan accuracy antar 3 model* | *Mean accuracy ± std* |
-| 2 | *Box plot* | *Distribusi F1 per model* | *Semua run F1* |
-| 3 | *Scatter plot* | *Trade-off accuracy vs training time* | *Mean accuracy vs mean time* |
+| # | Jenis Grafik          | Pesan                                                                      | Data yang Digunakan         |
+| - | --------------------- | -------------------------------------------------------------------------- | --------------------------- |
+| 1 | Bar Chart + Error Bar | Membandingkan Accuracy Collaborative Filtering dan Content-Based Filtering | Mean Accuracy ± Std         |
+| 2 | Box Plot              | Menampilkan distribusi Accuracy pada setiap run eksperimen                 | Seluruh nilai Accuracy      |
+| 3 | Scatter Plot          | Menganalisis hubungan Accuracy dengan waktu komputasi                      | Accuracy dan Execution Time |
 
 ---
 
@@ -129,17 +129,17 @@ Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu
 
 Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
 
-**Skenario:** Metode A = 91.2%, Metode B = 90.8%. Bar chart dengan Y-axis mulai dari 90%.
+**Skenario:** Collaborative Filtering = 90.0%, Content-Based Filtering = 88.7%. Grafik batang menggunakan sumbu-Y mulai dari 88%.
 
-| Pertanyaan | Jawaban |
-|-----------|---------|
-| Apakah Y-axis menyesatkan? | *Contoh: Ya — A terlihat 2× B padahal beda 0.4%* |
-| Apakah error bar ditampilkan? | |
-| Apakah semua kondisi ditampilkan? | |
-| Apa solusinya? | |
+| Pertanyaan                        | Jawaban                                                                                                                             |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Apakah Y-axis menyesatkan?        | **Ya.** Perbedaan terlihat jauh lebih besar padahal selisih sebenarnya hanya sekitar **1,3%**.                                      |
+| Apakah error bar ditampilkan?     | **Belum**, sehingga variasi hasil eksperimen tidak terlihat.                                                                        |
+| Apakah semua kondisi ditampilkan? | **Ya**, kedua metode dibandingkan secara bersamaan.                                                                                 |
+| Apa solusinya?                    | Gunakan sumbu-Y mulai dari **0%** atau berikan alasan jika dipotong, serta tambahkan **error bar** untuk menunjukkan variasi hasil. |
 
 **Evaluasi grafik Anda sendiri dari Latihan 2:**
-- [ ] Semua bias check lulus
+- [✓] Semua bias check lulus
 - [ ] Ada yang perlu diperbaiki: ____
 
 ---
@@ -148,5 +148,6 @@ Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
 
 > Mengapa tabel dan grafik keduanya diperlukan — tidak cukup salah satu saja? Pernahkah Anda membuat grafik yang (tanpa sengaja) menyesatkan?
 
-> ___________________________________________________
+> Tabel dan grafik memiliki fungsi yang saling melengkapi. Tabel menyajikan nilai numerik secara rinci dan presisi sehingga memudahkan pembaca melihat hasil pengukuran setiap metrik. Grafik memudahkan identifikasi pola, tren, dan perbandingan antar-metode secara visual. Penggunaan keduanya membuat hasil penelitian lebih mudah dipahami sekaligus mengurangi risiko kesalahan interpretasi. Selain itu, penyusunan grafik harus memperhatikan skala sumbu, error bar, dan penyajian seluruh data agar tidak menimbulkan bias visual.
+
 > ___________________________________________________

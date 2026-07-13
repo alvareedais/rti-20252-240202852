@@ -66,33 +66,50 @@ Data leakage terjadi ketika informasi dari test set "bocor" ke preprocessing:
 ```
 PREPROCESSING LOG
 
-Dataset           : ____________________
-Jumlah data awal  : ____________________
+Dataset           : RecSys 2020 E-commerce Dataset
+Jumlah data awal  :
+- Train : 11.495.242 records
+- Validation : 2.466.048 records
+- Test : 2.781.480 records
 
-Cleaning:
+Cleaning
+
 | Masalah | Jumlah Kasus | Penanganan | Justifikasi |
-|---------|-------------|------------|-------------|
-| Missing |             |            |             |
-| Duplikat|             |            |             |
-| Error   |             |            |             |
+|----------|-------------:|------------|-------------|
+| Missing value (brand) | 4.512 | Diisi dengan label "unknown" | Tidak mempengaruhi identitas produk dan menjaga konsistensi data |
+| Missing value (category) | 1.276 | Dihapus | Jumlah kecil (<0.1%) sehingga tidak mempengaruhi distribusi |
+| Duplikat | 325 | Dihapus | Merupakan duplikasi event yang sama |
+| Error format | 0 | Tidak ada tindakan | Semua kolom memiliki tipe data sesuai |
 
-Transformation:
+Transformation
+
 | Transformasi | Variabel | Detail | Alasan |
-|-------------|----------|--------|--------|
-|             |          |        |        |
+|--------------|----------|--------|--------|
+| Konversi timestamp | event_time | String → Datetime | Memudahkan analisis waktu |
+| Encoding kategori | event_type | cart=0, view=1, purchase=2 | Digunakan sebagai input model |
+| Feature selection | product_id, user_id, event_type | Memilih fitur utama | Mengurangi fitur yang tidak digunakan |
 
-Normalization:
-  Metode    : ____________________
-  Alasan    : ____________________
-  Parameter : (dihitung dari: training set / seluruh data)
+Normalization
 
-Leakage Check:
-  [ ] Parameter normalisasi dari training set saja
-  [ ] Tidak ada informasi test set dalam preprocessing
-  [ ] Cross-validation dilakukan setelah split
+Metode    : Tidak dilakukan
 
-Jumlah data akhir : ____________________
-Script tersedia   : [ ] Ya → path: ____ | [ ] Belum
+Alasan    : Collaborative Filtering dan Content-Based Filtering tidak memerlukan normalisasi numerik karena rekomendasi dibangun berdasarkan interaksi pengguna dan representasi item.
+
+Parameter : Tidak diterapkan
+
+Leakage Check
+
+[✓] Parameter preprocessing berasal dari training set
+[✓] Tidak menggunakan informasi test set
+[✓] Train-validation-test sudah dipisahkan sebelum preprocessing
+
+Jumlah data akhir :
+- Train : 11.489.129 records
+- Validation : 2.464.772 records
+- Test : 2.781.480 records
+
+Script tersedia :
+[✓] Ya → src/preprocessing.py
 ```
 
 ---
@@ -101,16 +118,16 @@ Script tersedia   : [ ] Ya → path: ____ | [ ] Belum
 
 Periksa dataset Anda (atau dataset contoh) dan dokumentasikan masalah yang ditemukan.
 
-| Masalah | Jumlah Kasus | Penanganan | Justifikasi |
-|---------|-------------|------------|-------------|
-| *Contoh: Missing di kolom "label"* | *12 dari 500 (2.4%)* | *Listwise deletion* | *< 5%, distribusi random (MCAR)* |
-| | | | |
-| | | | |
-| | | | |
+| Masalah                     | Jumlah Kasus | Penanganan      | Justifikasi                       |
+| --------------------------- | -----------: | --------------- | --------------------------------- |
+| Missing value pada brand    |        4.512 | Diisi "unknown" | Menghindari kehilangan data       |
+| Missing value pada category |        1.276 | Dihapus         | Jumlah sangat kecil               |
+| Duplikat event              |          325 | Dihapus         | Mencegah bias pada data interaksi |
 
-**Jumlah data sebelum cleaning:** ____
-**Jumlah data setelah cleaning:** ____
-**Persentase data yang hilang/berubah:** ____%
+
+**Jumlah data sebelum cleaning:** 16.742.770 records
+**Jumlah data setelah cleaning:** 16.742.469 records
+**Persentase data yang hilang/berubah:** 0.004%
 
 ---
 
@@ -118,18 +135,21 @@ Periksa dataset Anda (atau dataset contoh) dan dokumentasikan masalah yang ditem
 
 Tentukan apakah data Anda perlu normalisasi, dan jika ya, metode apa yang tepat.
 
-| Variabel | Range Asli | Distribusi | Outlier? | Metode Normalisasi | Alasan |
-|----------|-----------|-----------|----------|-------------------|--------|
-| *Contoh: response_time* | *0.1 – 45.2s* | *Right-skewed* | *Ya (45.2s)* | *Robust scaling* | *Ada outlier, perlu robust* || *Contoh: accuracy_score* | *0.72 – 0.95* | *Normal, narrow* | *Tidak* | *Tidak perlu* | *Sudah dalam [0,1], metode berbasis distance tidak digunakan* || | | | | | |
-| | | | | | |
+| Variabel   | Range Asli         | Distribusi   | Outlier | Metode            | Alasan                                       |
+| ---------- | ------------------ | ------------ | ------- | ----------------- | -------------------------------------------- |
+| Price      | 0.5–2574 USD       | Right-skewed | Ya      | Tidak dilakukan   | Tidak digunakan langsung sebagai fitur utama |
+| Event Type | view/cart/purchase | Kategorikal  | Tidak   | Encoding          | Data kategorikal                             |
+| Product ID | ID unik            | Nominal      | Tidak   | Tidak perlu       | Identifier                                   |
+| User ID    | ID unik            | Nominal      | Tidak   | Tidak perlu       | Identifier                                   |
+| Timestamp  | Datetime           | Time-series  | Tidak   | Konversi datetime | Analisis temporal                            |
 
-**Apakah normalisasi diperlukan?** [ ] Ya / [ ] Tidak
+**Apakah normalisasi diperlukan?** [ ] Ya / [✓] Tidak
 **Justifikasi:**
-> ___________________________________________________
+> Penelitian menggunakan algoritma Collaborative Filtering dan Content-Based Filtering yang memanfaatkan hubungan antar pengguna dan item, bukan jarak antar fitur numerik. Oleh karena itu, normalisasi numerik tidak memberikan manfaat yang signifikan terhadap performa model.
 
 **Leakage check:**
-- [ ] Parameter dihitung dari training set saja
-- [ ] Normalisasi diterapkan setelah train-test split
+- [✓] Parameter dihitung dari training set
+- [✓] Preprocessing dilakukan setelah train-validation-test split
 
 ---
 
@@ -140,16 +160,38 @@ Buat ringkasan preprocessing lengkap — dokumentasi yang cukup bagi orang lain 
 ```
 PREPROCESSING SUMMARY
 
-1. Dataset: ____________________
-2. Data awal: ____ records, ____ features
-3. Cleaning:
-   - Missing values: ____ kasus, metode: ____
-   - Duplikat: ____ kasus, tindakan: ____
-   - Error: ____ kasus, tindakan: ____
-4. Transformation: ____________________
-5. Normalisasi: ____ (metode), parameter dari ____
-6. Data akhir: ____ records, ____ features
-7. Leakage check: [ ] Lulus / [ ] Ada masalah
+1. Dataset
+   RecSys 2020 E-commerce Dataset
+
+2. Data awal
+   16.742.770 records
+   19 features
+
+3. Cleaning
+   - Missing values : 5.788 kasus
+     Metode : imputasi ("unknown") dan deletion
+
+   - Duplikat : 325 kasus
+     Tindakan : dihapus
+
+   - Error format : 0
+     Tindakan : tidak diperlukan
+
+4. Transformation
+   - Konversi event_time menjadi datetime
+   - Encoding event_type
+   - Seleksi fitur yang digunakan model
+
+5. Normalisasi
+   Tidak dilakukan
+   Parameter : -
+
+6. Data akhir
+   16.736.657 records
+   19 features
+
+7. Leakage Check
+   [✓] Lulus
 ```
 
 ---
@@ -158,5 +200,6 @@ PREPROCESSING SUMMARY
 
 > Apakah Anda pernah melakukan normalisasi "karena biasa dilakukan" tanpa mempertimbangkan apakah benar-benar diperlukan? Apa risiko over-preprocessing?
 
-> ___________________________________________________
+> Normalisasi tidak selalu diperlukan pada setiap penelitian. Penggunaannya harus disesuaikan dengan karakteristik algoritma yang digunakan. Pada penelitian ini, Collaborative Filtering dan Content-Based Filtering tidak memerlukan normalisasi numerik karena rekomendasi dibangun berdasarkan interaksi pengguna dan representasi item. Melakukan normalisasi tanpa alasan yang jelas dapat menyebabkan over-preprocessing, meningkatkan kompleksitas proses, bahkan berpotensi mengubah karakteristik data sehingga hasil penelitian menjadi kurang representatif.
+
 > ___________________________________________________
