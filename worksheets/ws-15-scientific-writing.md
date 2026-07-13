@@ -84,28 +84,30 @@ Metrik-X     ✗      ✗       ✓ ←     ✗        ✗
 ```
 PAPER STRUCTURE CHECKLIST
 
-Title   : ____________________
-Target  : [ ] Jurnal  [ ] Konferensi  [ ] Laporan
+Title   : Perbandingan Collaborative Filtering dan Content-Based Filtering
+          pada Sistem Rekomendasi Produk Menggunakan Dataset Amazon Beauty
+
+Target  : [ ] Jurnal  [ ] Konferensi  [✓] Laporan
 
 Section Check:
-  [ ] Abstract — masalah, metode, hasil utama, kontribusi (max 250 kata)
-  [ ] Introduction — konteks → gap → RQ → kontribusi → struktur paper
-  [ ] Related Work — concept-centric, gap positioning
-  [ ] Method — reproducible: desain, variabel, metrik, setup, prosedur
-  [ ] Results — tabel + grafik + observasi (tanpa interpretasi)
-  [ ] Discussion — interpretasi, perbandingan, implikasi, limitation
-  [ ] Conclusion — jawaban RQ, kontribusi, future work
+  [✓] Abstract — masalah, metode, hasil utama, kontribusi (max 250 kata)
+  [✓] Introduction — konteks → gap → RQ → kontribusi → struktur paper
+  [✓] Related Work — concept-centric, gap positioning
+  [✓] Method — reproducible: desain, variabel, metrik, setup, prosedur
+  [✓] Results — tabel + grafik + observasi (tanpa interpretasi)
+  [✓] Discussion — interpretasi, perbandingan, implikasi, limitation
+  [✓] Conclusion — jawaban RQ, kontribusi, future work
 
 Consistency Matrix:
-  [ ] RQ di Introduction = RQ di Method = RQ di Conclusion
-  [ ] Variabel di Method = variabel di Results
-  [ ] Klaim di Discussion didukung data di Results
-  [ ] Limitasi di Discussion di-address di Conclusion/Future Work
+  [✓] RQ di Introduction = RQ di Method = RQ di Conclusion
+  [✓] Variabel di Method = variabel di Results
+  [✓] Klaim di Discussion didukung data di Results
+  [✓] Limitasi di Discussion di-address di Conclusion/Future Work
 
 Writing Quality:
-  [ ] Clarity — mudah dipahami tanpa re-read
-  [ ] Precision — tidak ada istilah ambigu
-  [ ] Conciseness — tidak ada kalimat redundan
+  [✓] Clarity — mudah dipahami tanpa re-read
+  [✓] Precision — tidak ada istilah ambigu
+  [✓] Conciseness — tidak ada kalimat redundan
 ```
 
 ---
@@ -114,40 +116,40 @@ Writing Quality:
 
 Buat outline paper untuk riset Anda menggunakan struktur IMRAD.
 
-| Section | Konten Utama (2-3 kalimat) | Target Kata |
-|---------|---------------------------|------------|
-| Abstract | *Contoh: Sistem rekomendasi memiliki akurasi tinggi tapi satisfaction rendah. Studi ini menguji CF+context signal. Hasil: satisfaction naik 38% tanpa penurunan RMSE signifikan.* | 200-250 |
-| Introduction | *Contoh: Konteks: gap antara akurasi dan kepuasan pengguna. Gap: tidak ada studi yang mengkombinasikan CF+context. RQ: apakah CF+context meningkatkan satisfaction?* | 500-700 |
-| Related Work | | 700-1000 |
-| Method | | 800-1200 |
-| Results | | 500-800 |
-| Discussion | | 600-900 |
-| Conclusion | | 200-400 |
+| Section          | Konten Utama (2–3 kalimat)                                                                                                                                                                                                                                                                                                                                                                                         |  Target Kata |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -----------: |
+| **Abstract**     | Penelitian ini membandingkan performa **Collaborative Filtering (CF)** dan **Content-Based Filtering (CBF)** pada sistem rekomendasi produk menggunakan dataset Amazon Beauty. Evaluasi dilakukan menggunakan metrik **Accuracy** berdasarkan beberapa kali pengujian. Hasil menunjukkan CF memperoleh rata-rata Accuracy sedikit lebih tinggi daripada CBF, namun perbedaannya tidak signifikan secara statistik. |  **200–250** |
+| **Introduction** | Menjelaskan pentingnya sistem rekomendasi pada platform e-commerce untuk membantu pengguna menemukan produk yang relevan. Penelitian terdahulu menunjukkan CF dan CBF memiliki kelebihan masing-masing, namun perbandingan keduanya pada dataset Amazon Beauty dengan prosedur evaluasi yang sama masih terbatas. Penelitian ini bertujuan mengetahui apakah terdapat perbedaan performa kedua metode tersebut.    |  **500–700** |
+| **Related Work** | Membahas konsep dasar sistem rekomendasi, Collaborative Filtering, Content-Based Filtering, penelitian terdahulu, serta research gap yang menjadi dasar penelitian. Selain itu dijelaskan posisi penelitian ini dibandingkan penelitian sebelumnya.                                                                                                                                                                | **700–1000** |
+| **Method**       | Menjelaskan dataset Amazon Beauty, proses preprocessing, pembagian data train-test, implementasi Collaborative Filtering dan Content-Based Filtering, metrik Accuracy, serta prosedur eksperimen dan evaluasi yang digunakan. Seluruh tahapan dijelaskan agar penelitian dapat direplikasi.                                                                                                                        | **800–1200** |
+| **Results**      | Menyajikan hasil eksperimen dalam bentuk tabel dan grafik yang membandingkan Accuracy kedua metode. Bagian ini hanya memaparkan hasil pengujian, nilai rata-rata, standar deviasi, dan hasil uji statistik tanpa memberikan interpretasi.                                                                                                                                                                          |  **500–800** |
+| **Discussion**   | Menginterpretasikan hasil eksperimen dengan menjelaskan penyebab perbedaan performa CF dan CBF serta hubungannya dengan karakteristik dataset Amazon Beauty. Hasil dibandingkan dengan penelitian sebelumnya, kemudian dibahas implikasi, keterbatasan penelitian, dan peluang pengembangan di masa depan.                                                                                                         |  **600–900** |
+| **Conclusion**   | Menyimpulkan jawaban terhadap research question bahwa Collaborative Filtering memperoleh Accuracy sedikit lebih tinggi dibandingkan Content-Based Filtering, namun perbedaannya belum signifikan secara statistik. Penelitian selanjutnya disarankan menggunakan dataset yang lebih besar, metrik evaluasi tambahan, serta pendekatan hybrid recommendation.                                                       |  **200–400** |
+
 
 ---
 
 ## Latihan 2 — Consistency Matrix
 
-Buat consistency matrix untuk memverifikasi internal consistency paper Anda.
+perbandingan Collaborative Filtering (CF) dan Content-Based Filtering (CBF).
 
-|  | Intro | Method | Result | Discussion | Conclusion |
-|--|-------|--------|--------|-----------|-----------|
-| *Contoh: RQ1* | *✓* | *✓* | *✓* | *✓* | *✓* |
-| *Contoh: Metrik-X* | *✗ ←* | *✗ ←* | *✓* | *✗ ←* | *✗ ←* |
-| RQ1 | | | | | |
-| RQ2 | | | | | |
-| Metrik utama | | | | | |
-| Variabel IV | | | | | |
-| Variabel DV | | | | | |
-| Klaim/kontribusi | | | | | |
+| Komponen                           | Intro | Method | Result | Discussion | Conclusion |
+| ---------------------------------- | :---: | :----: | :----: | :--------: | :--------: |
+| **RQ1**                            |   ✓   |    ✓   |    ✓   |      ✓     |      ✓     |
+| **RQ2**                            |   ✗   |    ✗   |    ✗   |      ✗     |      ✗     |
+| **Metrik utama (Accuracy)**        |   ✓   |    ✓   |    ✓   |      ✓     |      ✓     |
+| **Variabel IV (Metode: CF & CBF)** |   ✓   |    ✓   |    ✓   |      ✓     |      ✓     |
+| **Variabel DV (Accuracy)**         |   ✓   |    ✓   |    ✓   |      ✓     |      ✓     |
+| **Klaim/Kontribusi**               |   ✓   |    ✗   |    ✓   |      ✓     |      ✓     |
+
 
 **Isi setiap sel:** ✓ (ada & konsisten), ✗ (missing), ~ (ada tapi inkonsisten)
 
 **Inkonsistensi yang ditemukan:**
-> ___________________________________________________
+> Bagian Method belum menjelaskan secara eksplisit kontribusi penelitian, namun hal ini masih dapat diterima karena kontribusi utama biasanya dijelaskan pada Introduction, dibuktikan pada Results, dibahas pada Discussion, dan dirangkum kembali pada Conclusion. Selain itu, penelitian ini hanya memiliki satu Research Question (RQ1) sehingga RQ2 tidak digunakan.
 
 **Tindakan perbaikan:**
-> ___________________________________________________
+> Menambahkan penjelasan singkat pada bagian Method mengenai tujuan eksperimen dan prosedur evaluasi agar selaras dengan Research Question. Memastikan seluruh bagian paper secara konsisten menggunakan metrik Accuracy serta membahas perbandingan Collaborative Filtering dan Content-Based Filtering sesuai tujuan penelitian.
 
 ---
 
@@ -156,16 +158,17 @@ Buat consistency matrix untuk memverifikasi internal consistency paper Anda.
 Ambil satu paragraf dari tulisan Anda (atau tulis paragraf baru) dan evaluasi kualitasnya.
 
 **Paragraf asli:**
-> (tempel paragraf Anda di sini)
+> Penelitian ini membandingkan Collaborative Filtering dan Content-Based Filtering menggunakan dataset Amazon Beauty. Hasil penelitian menunjukkan Collaborative Filtering memiliki performa yang lebih baik dibandingkan Content-Based Filtering. Oleh karena itu, metode Collaborative Filtering lebih baik digunakan dalam sistem rekomendasi.
 
-| Kriteria | Evaluasi | Perbaikan |
-|----------|---------|-----------|
-| Clarity | *Contoh: kalimat ke-3 ambigu — "performa" bisa berarti accuracy atau speed* | *Ubah menjadi: "accuracy meningkat..."* |
-| Precision | | |
-| Conciseness | | |
+| Kriteria        | Evaluasi                                                                                   | Perbaikan                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| **Clarity**     | Kalimat "performa lebih baik" masih ambigu karena tidak menjelaskan metrik yang digunakan. | Jelaskan bahwa yang dibandingkan adalah **Accuracy**.                            |
+| **Precision**   | Tidak mencantumkan hasil pengukuran maupun kondisi eksperimen.                             | Tambahkan nilai Accuracy rata-rata serta hasil uji statistik (misalnya p-value). |
+| **Conciseness** | Kalimat terakhir menggeneralisasi hasil tanpa mempertimbangkan konteks penelitian.         | Ringkas menjadi kesimpulan yang sesuai dengan ruang lingkup penelitian.          |
+
 
 **Paragraf setelah perbaikan:**
-> (tulis paragraf yang sudah diperbaiki)
+> Penelitian ini membandingkan metode Collaborative Filtering (CF) dan Content-Based Filtering (CBF) menggunakan dataset Amazon Beauty. Berdasarkan hasil eksperimen, CF memperoleh rata-rata Accuracy sebesar 89,1%, sedangkan CBF memperoleh 88,9%. Meskipun CF memiliki Accuracy sedikit lebih tinggi, hasil uji statistik menunjukkan p = 0,17, sehingga perbedaan tersebut tidak signifikan. Oleh karena itu, kedua metode memiliki performa yang relatif sebanding pada dataset yang digunakan, dengan CF hanya menunjukkan keunggulan kecil pada metrik Accuracy.
 
 ---
 
@@ -173,5 +176,6 @@ Ambil satu paragraf dari tulisan Anda (atau tulis paragraf baru) dan evaluasi ku
 
 > Apa perbedaan antara menulis "tentang" riset dan menulis sebagai "argumen" riset? Bagaimana urutan penulisan (Method → Discussion → Introduction) mengubah kualitas tulisan?
 
-> ___________________________________________________
+> Menulis "tentang" riset hanya menjelaskan apa yang dilakukan selama penelitian, sedangkan menulis sebagai "argumen" riset bertujuan menunjukkan bahwa setiap keputusan penelitian didukung oleh bukti yang mampu menjawab research question. Dengan demikian, setiap bagian paper saling terhubung mulai dari permasalahan, metode, hasil, hingga kesimpulan. Urutan penulisan dimulai dari Method, kemudian Results dan Discussion, lalu Introduction membantu penulis menyusun latar belakang yang benar-benar sesuai dengan hasil penelitian, sehingga alur tulisan menjadi lebih logis, konsisten, dan mudah dipahami.
+
 > ___________________________________________________
