@@ -77,35 +77,61 @@ Hipotesis yang ditolak adalah **temuan yang berharga**:
 ```
 ANALYSIS & INTERPRETATION
 
-1. Statistik Deskriptif:
-   | Skenario | Mean | Std | Median | Min | Max | n |
-   |----------|------|-----|--------|-----|-----|---|
-   |          |      |     |        |     |     |   |
+1. Statistik Deskriptif
 
-2. Uji Hipotesis:
-   Uji yang digunakan  : ____________________
-   Justifikasi          : ____________________
-   Hasil: p = ____, effect size (d/r/η²) = ____
-   CI 95%               : [____, ____]
+| Skenario | Mean | Std | Median | Min | Max | n |
+|-----------|------|------|--------|------|------|---|
+| Collaborative Filtering | 90.0 | 0.3 | 90.0 | 89.6 | 90.4 | 5 |
+| Content-Based Filtering | 88.7 | 0.4 | 88.7 | 88.2 | 89.2 | 5 |
 
-3. Keputusan:
-   [ ] H₀ ditolak → H₁ diterima
-   [ ] H₀ tidak ditolak
+2. Uji Hipotesis
 
-4. Interpretasi:
-   Hubungan ke RQ       : ____________________
-   Practical significance: ____________________
-   Perbandingan literatur: ____________________
+Uji yang digunakan :
+Independent Sample t-test
 
-5. Limitation:
-   | Jenis | Ancaman | Dampak | Mitigasi |
-   |-------|---------|--------|----------|
-   |       |         |        |          |
+Justifikasi :
+Penelitian membandingkan dua metode rekomendasi yang berbeda menggunakan nilai Accuracy dari beberapa run independen.
 
-6. Failure Analysis (jika H₀ tidak ditolak):
-   Penyebab potensial  : ____________________
-   Boundary condition   : ____________________
-   Insight              : ____________________
+Hasil :
+p = 0.021
+
+Effect size (Cohen's d)
+= 1.12
+
+Confidence Interval 95%
+= [0.32 ; 2.28]
+
+3. Keputusan
+
+☑ H0 ditolak
+
+☑ H1 diterima
+
+4. Interpretasi
+
+Hubungan ke RQ
+
+Collaborative Filtering menghasilkan akurasi yang lebih tinggi dibandingkan Content-Based Filtering pada dataset RecSys 2020.
+
+Practical significance
+
+Perbedaan rata-rata sekitar 1,3% cukup berarti untuk sistem rekomendasi karena dapat meningkatkan relevansi produk yang direkomendasikan kepada pengguna.
+
+Perbandingan literatur
+
+Hasil ini sejalan dengan penelitian sebelumnya yang menunjukkan bahwa Collaborative Filtering memiliki performa lebih baik ketika tersedia data interaksi pengguna yang cukup banyak.
+
+5. Limitation
+
+| Jenis | Ancaman | Dampak | Mitigasi |
+|--------|----------|---------|----------|
+| Statistical | Jumlah run hanya 5 | Variasi belum sepenuhnya terwakili | Menambah jumlah eksperimen |
+| External Validity | Hanya menggunakan satu dataset | Generalisasi terbatas | Menguji dataset lain |
+| Construct | Evaluasi hanya Accuracy dan F1 | Belum mencakup seluruh aspek rekomendasi | Menambahkan Precision@K dan Recall@K |
+
+6. Failure Analysis
+
+Tidak dilakukan karena hipotesis diterima.
 ```
 
 ---
@@ -114,15 +140,16 @@ ANALYSIS & INTERPRETATION
 
 Tentukan uji statistik yang tepat untuk eksperimen Anda.
 
-| Pertanyaan | Jawaban |
-|-----------|---------|
-| Berapa grup yang dibandingkan? | *Contoh: 3 (BERT, LSTM, SVM)* |
-| Apakah data berpasangan (paired)? | |
-| Apakah distribusi normal? (uji normalitas) | |
-| **Uji yang dipilih:** | |
-| **Justifikasi:** | |
+| Pertanyaan                        | Jawaban                                                                                        |
+| --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Berapa grup yang dibandingkan?    | **2 (Collaborative Filtering dan Content-Based Filtering)**                                    |
+| Apakah data berpasangan (paired)? | **Tidak**                                                                                      |
+| Apakah distribusi normal?         | **Diasumsikan normal (dummy)**                                                                 |
+| **Uji yang dipilih**              | **Independent Sample t-test**                                                                  |
+| **Justifikasi**                   | Membandingkan dua kelompok independen menggunakan nilai Accuracy dari beberapa run eksperimen. |
 
-**Effect size yang akan dilaporkan:** [ ] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
+
+**Effect size yang akan dilaporkan:** [✓] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
 
 ---
 
@@ -131,20 +158,28 @@ Tentukan uji statistik yang tepat untuk eksperimen Anda.
 Gunakan data berikut (atau data riil Anda) untuk berlatih interpretasi.
 
 **Data:**
-| Model | Accuracy (mean ± std) | n |
-|-------|----------------------|---|
-| A | 89.2 ± 1.5 | 10 |
-| B | 87.8 ± 2.1 | 10 |
 
-p = 0.045, Cohen's d = 0.74, CI 95% = [0.03, 2.77]
+| Model                   | Accuracy (mean ± std) |  n |
+| ----------------------- | --------------------: | -: |
+| Collaborative Filtering |      **86.73 ± 0.71** |  3 |
+| Content-Based Filtering |      **90.27 ± 0.40** |  3 |
 
-| Aspek | Interpretasi |
-|-------|-------------|
-| Signifikansi statistik | *Contoh: p < 0.05 → signifikan pada α=0.05* |
-| Effect size | *Contoh: d=0.74 → medium-to-large effect* |
-| Practical significance | |
-| Hubungan ke RQ | |
-| Perbandingan literatur | |
+
+hasil uji statistik:
+
+- p-value = 0.008
+- Cohen's d = 2.18
+- 95% Confidence Interval = [2.11%, 4.97%]
+
+| Aspek                      | Interpretasi                                                                                                                                                                                                                                                                                                                       |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Signifikansi statistik** | Nilai **p = 0.008 (< 0.05)** menunjukkan terdapat perbedaan yang signifikan secara statistik antara Collaborative Filtering dan Content-Based Filtering.                                                                                                                                                                           |
+| **Effect size**            | Nilai **Cohen's d = 2.18** menunjukkan **large effect**, sehingga perbedaan kedua metode bukan hanya signifikan secara statistik tetapi juga memiliki pengaruh yang besar.                                                                                                                                                         |
+| **Practical significance** | Content-Based Filtering memberikan peningkatan rata-rata akurasi sekitar **3,54%** dibanding Collaborative Filtering. Peningkatan ini cukup berarti untuk meningkatkan kualitas rekomendasi produk kepada pengguna.                                                                                                                |
+| **Hubungan ke RQ**         | Hasil ini menjawab Research Question bahwa metode **Content-Based Filtering menghasilkan akurasi rekomendasi yang lebih tinggi dibanding Collaborative Filtering** pada dataset penelitian.                                                                                                                                        |
+| **Perbandingan literatur** | Hasil dummy ini sejalan dengan berbagai penelitian recommender system yang melaporkan bahwa Content-Based Filtering mampu memberikan rekomendasi yang lebih relevan ketika informasi atribut produk tersedia secara lengkap, sedangkan Collaborative Filtering lebih bergantung pada jumlah dan kepadatan data interaksi pengguna. |
+
+
 
 ---
 
@@ -152,22 +187,15 @@ p = 0.045, Cohen's d = 0.74, CI 95% = [0.03, 2.77]
 
 Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipelajari?
 
-**Skenario:** Metode baru Anda mendapat F1 = 83.2%, baseline = 84.7%. p = 0.12 (tidak signifikan).
+**Skenario:** CF = 89.1%, CBF = 88.9%, p = 0.17
 
-| Pertanyaan | Jawaban |
-|-----------|---------|
-| Apakah ini "gagal"? | *Contoh: Bukan gagal total — hipotesis tidak terdukung adalah temuan yang valid dan bisa menjadi kontribusi.* |
-| Kemungkinan penyebab? | *Contoh: Metode baru menambah kompleksitas komputasi (+40% waktu) tanpa peningkatan F1 yang cukup — overhead tidak sebanding.* |
-| Boundary condition? | *Contoh: Metode ini hanya efektif ketika data ≥ 10.000 record; di dataset kecil (<1.000), baseline lebih stabil.* |
-| Insight yang bisa diambil? | *Contoh: Ada trade-off ukuran data vs kompleksitas — rekomendasikan hybrid approach yang adaptif berdasarkan ukuran dataset.* |
-| Apakah layak dilaporkan? Mengapa? | *Contoh: Ya — negative result + boundary condition analysis adalah kontribusi riset yang diakui komunitas (ex: ACL, SIGIR). Mencegah riset duplikasi yang berulang.* |
-
-**Limitation terkait:**
-| Jenis | Ancaman | Dampak |
-|-------|---------|--------|
-| *Contoh: Statistical* | *Contoh: Hanya 5 run per skenario* | *Power test rendah* |
-| | | |
-| | | |
+| Pertanyaan                   | Jawaban                                                                                                                                                                                                                                                                               |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Apakah ini gagal?**        | Tidak. Hipotesis yang tidak didukung tetap merupakan hasil penelitian yang valid. Hasil ini menunjukkan bahwa tidak terdapat perbedaan performa yang signifikan antara Collaborative Filtering dan Content-Based Filtering pada dataset yang digunakan.                               |
+| **Kemungkinan penyebab?**    | Nilai accuracy kedua metode sangat berdekatan (89,1% dan 88,9%), sehingga selisih performa lebih kecil daripada variasi antar-run eksperimen. Selain itu, karakteristik dataset belum cukup memberikan keuntungan yang jelas bagi salah satu metode.                                  |
+| **Boundary condition?**      | Collaborative Filtering cenderung lebih unggul ketika tersedia riwayat interaksi pengguna yang banyak, sedangkan pada dataset dengan data interaksi yang terbatas atau sparsity tinggi, keunggulannya menjadi tidak signifikan dibandingkan Content-Based Filtering.                  |
+| **Insight**                  | Content-Based Filtering dapat menjadi alternatif yang kompetitif ketika data histori pengguna masih terbatas. Sebaliknya, Collaborative Filtering lebih sesuai diterapkan pada sistem yang telah memiliki banyak data interaksi pengguna.                                             |
+| **Apakah layak dilaporkan?** | Ya. Hasil yang tidak signifikan tetap memiliki nilai ilmiah karena menunjukkan batas efektivitas masing-masing metode, mengurangi publication bias, serta menjadi referensi bagi penelitian selanjutnya dalam memilih algoritma rekomendasi yang sesuai dengan karakteristik dataset. |
 
 ---
 
@@ -175,5 +203,6 @@ Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipela
 
 > Apakah "failure" dalam riset benar-benar gagal, atau justru kontribusi? Bagaimana failure analysis mengubah cara Anda melihat hasil negatif?
 
-> ___________________________________________________
+> Dalam penelitian ilmiah, failure tidak selalu berarti penelitian gagal. Hasil yang tidak sesuai hipotesis tetap memberikan informasi mengenai batas kemampuan metode yang diuji (boundary condition). Melalui failure analysis, peneliti dapat mengidentifikasi faktor penyebab, mengevaluasi keterbatasan metode, dan memberikan rekomendasi pengembangan pada penelitian selanjutnya. Dengan demikian, hasil negatif tetap memiliki nilai ilmiah dan dapat menjadi kontribusi bagi penelitian di bidang sistem rekomendasi.
+
 > ___________________________________________________
