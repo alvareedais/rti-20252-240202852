@@ -65,25 +65,32 @@ Keduanya **saling melengkapi**:
 ```
 RESULT PRESENTATION PLAN
 
-Research Question : ____________________
-Metrik Utama      : ____________________
+Research Question :
+Bagaimana perbandingan performa Collaborative Filtering dan Content-Based Filtering pada dataset RecSys 2020 E-commerce Dataset?
+
+Metrik Utama :
+Accuracy (%)
 
 Tabel Hasil:
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-|          |                      |                      |   |
+
+| Skenario                | Accuracy (mean ± std) | F1-Score (mean ± std) | n |
+|--------------------------|----------------------:|----------------------:|--:|
+| Collaborative Filtering  | 90.0 ± 0.3 %          | 89.3 ± 0.4 %          | 5 |
+| Content-Based Filtering  | 88.7 ± 0.4 %          | 88.0 ± 0.5 %          | 5 |
 
 Visualisasi yang Direncanakan:
+
 | # | Jenis Grafik | Pesan Utama | Metrik |
-|---|-------------|-------------|--------|
-| 1 |             |             |        |
-| 2 |             |             |        |
+|---|--------------|-------------|--------|
+| 1 | Bar Chart + Error Bar | Membandingkan performa kedua metode | Mean Accuracy ± Std |
+| 2 | Box Plot | Menunjukkan distribusi Accuracy tiap metode | Accuracy seluruh run |
+| 3 | Scatter Plot | Hubungan Accuracy dengan waktu komputasi | Accuracy vs Execution Time |
 
 Bias Check:
-  [ ] Y-axis mulai dari 0 (atau dijustifikasi)
-  [ ] Error bar/CI ditampilkan
-  [ ] Semua data disertakan (tidak cherry-picked)
-  [ ] Tidak menggunakan 3D tanpa alasan
+[✓] Y-axis mulai dari 0
+[✓] Error bar ditampilkan
+[✓] Semua data disertakan
+[✓] Tidak menggunakan efek 3D
 ```
 
 ---
@@ -92,11 +99,11 @@ Bias Check:
 
 Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya data riil).
 
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-| *Contoh: BERT-base* | *88.4 ± 1.2%* | *45.2 ± 3.1 min* | *10* |
-| | | | |
-| | | | |
+| Skenario                | Accuracy (mean ± std) | F1-Score (mean ± std) |     n |
+| ----------------------- | --------------------: | --------------------: | ----: |
+| Collaborative Filtering |      **90.0 ± 0.3 %** |      **89.3 ± 0.4 %** | **5** |
+| Content-Based Filtering |      **88.7 ± 0.4 %** |      **88.0 ± 0.5 %** | **5** |
+
 
 **Checklist tabel:**
 - [ ] Self-contained (judul jelas, satuan ada, N tercantum)

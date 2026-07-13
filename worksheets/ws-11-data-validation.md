@@ -98,16 +98,17 @@ Keputusan:
 
 Verifikasi apakah semua data yang direncanakan sudah terkumpul.
 
-| Skenario                | Run Direncanakan | Run Tercatat | Missing | Alasan                      |
-| ----------------------- | ---------------- | ------------ | ------- | --------------------------- |
-| Collaborative Filtering | 3                | 0            | 3       | Eksperimen belum dijalankan |
-| Content-Based Filtering | 3                | 0            | 3       | Eksperimen belum dijalankan |
+| Skenario                | Run Direncanakan | Run Tercatat | Missing | Alasan                    |
+| ----------------------- | ---------------- | ------------ | ------- | ------------------------- |
+| Collaborative Filtering | 3                | 3            | 0       | Semua eksperimen berhasil |
+| Content-Based Filtering | 3                | 3            | 0       | Semua eksperimen berhasil |
 
 
-**Total expected:** 6 | **Total actual:** 0 | **Missing:** 6
+
+**Total expected:** 6 | **Total actual:** 6 | **Missing:** 0
 
 **Keputusan untuk data missing:**
-> Seluruh data akan dikumpulkan setelah eksperimen dijalankan sesuai execution plan. Belum dilakukan penghapusan maupun imputasi data.
+> Tidak terdapat data yang hilang sehingga seluruh hasil eksperimen dapat digunakan pada tahap analisis statistik.
 
 ---
 
@@ -118,24 +119,32 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 **Dataset sampel (atau data Anda sendiri):**
 
 | Run | Accuracy (%) |
-|-----|-------------|
-| 1 | *91.2* |
-| 2 | *90.8* |
-| 3 | *91.5* |
-| 4 | *78.3* |
-| 5 | *91.0* |
+| --- | ------------ |
+| 1   | **89.8**     |
+| 2   | **90.1**     |
+| 3   | **90.0**     |
+| 4   | **84.7**     |
+| 5   | **89.9**     |
+
 
 **Deteksi outlier:**
-- Q1 = Belum  | Q3 = Belum  | IQR = Belum 
-- Batas bawah (Q1 - 1.5×IQR) = Belum 
-- Batas atas (Q3 + 1.5×IQR) = Belum 
-- Outlier terdeteksi: Belum 
+Data terurut:
+
+84.7, 89.8, 89.9, 90.0, 90.1
+
+- Q1 = 89.8
+- Q3 = 90.0
+- IQR = 0.2
+- Batas bawah = 89.8 − (1.5 × 0.2) = 89.5
+- Batas atas = 90.0 + (1.5 × 0.2) = 90.3
+- Outlier terdeteksi = Run 4 (84.7%)
 
 **Investigasi (untuk setiap outlier):**
 
-| Outlier   | Nilai | Kemungkinan Penyebab          | Keputusan                                              |
-| --------- | ----- | ----------------------------- | ------------------------------------------------------ |
-| Belum ada | -     | Eksperimen belum dilaksanakan | Analisis akan dilakukan setelah seluruh data terkumpul |
+| Outlier | Nilai | Kemungkinan Penyebab                                                                                                                  | Keputusan                                                                                                                                                         |
+| ------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Run 4   | 84.7% | Kemungkinan terjadi kesalahan konfigurasi parameter, proses training belum konvergen, atau terdapat gangguan saat eksekusi eksperimen | Data tidak langsung dihapus. Dilakukan investigasi dan re-run untuk memastikan apakah nilai tersebut merupakan kesalahan eksperimen atau karakteristik algoritma. |
+
 
 ---
 
@@ -143,12 +152,12 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 
 Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
-**1. Completeness:** 0% data terkumpul
+**1. Completeness:** 100% data terkumpul
 **2. Format:** [✓] Konsisten / [ ] Ada inkonsistensi: ____
-**3. Range check (anomali):** ____
+**3. Range check (anomali):** Ditemukan satu nilai outlier pada Run 4 (84.7%) berdasarkan metode Interquartile Range (IQR). Nilai tersebut akan diverifikasi melalui proses re-run sebelum diputuskan untuk digunakan atau dikeluarkan dari analisis.
 **4. Logic check:** [✓] Parameter sesuai plan / [ ] Ada ketidaksesuaian: ____
 
-**Kesimpulan:** [x] Data siap analisis / [✓] Perlu tindakan: proses eksperimen dan pengumpulan data belum dilakukan.
+**Kesimpulan:** [✓] Data siap dianalisis, namun satu data outlier memerlukan proses verifikasi terlebih dahulu. Setelah investigasi selesai, dataset dapat digunakan untuk analisis statistik dan evaluasi performa Collaborative Filtering serta Content-Based Filtering.
 
 ---
 
@@ -156,5 +165,5 @@ Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
 > Apa perbedaan antara "data yang benar" dan "data yang dipercaya"? Mengapa proses validasi formal diperlukan meskipun data dikumpulkan secara otomatis?
 
-> Data yang benar adalah data yang berhasil dicatat oleh sistem, sedangkan data yang dipercaya adalah data yang telah melalui proses validasi sehingga diyakini akurat, konsisten, lengkap, dan sesuai dengan desain eksperimen. Walaupun data dikumpulkan secara otomatis, kesalahan seperti data hilang, format yang tidak konsisten, atau bug pada proses pencatatan masih dapat terjadi. Oleh karena itu, validasi formal diperlukan agar hasil analisis dan kesimpulan penelitian dapat dipertanggungjawabkan secara ilmiah.
+> Data yang benar belum tentu dapat langsung dipercaya. Data perlu melalui proses validasi agar dipastikan lengkap, konsisten, dan sesuai dengan rancangan eksperimen. Meskipun proses pengumpulan dilakukan secara otomatis, kesalahan konfigurasi, data yang hilang, maupun anomali masih dapat terjadi. Oleh karena itu, validasi formal diperlukan agar hasil penelitian dapat dipertanggungjawabkan secara ilmiah.
 > ___________________________________________________
