@@ -1,25 +1,34 @@
 # Laporan Penelitian
 
-**Judul:** Performance and Security Evaluation of Mitigating JWKS Endpoint Flooding on Microservices Gateway Using Redis-PostgreSQL Hybrid Caching
+**Judul:** Perbandingan Kinerja Metode Collaborative Filtering dan Content-Based Filtering pada Sistem Rekomendasi Produk E-Commerce
 
-**Peneliti:** Helmi Bahar Alim
-**Target Publikasi:** Sinta 2 (Jurnal RESTI/Telematika) atau Scopus Q3–Q4
-**Status Penelitian:** Tahap 1–4 selesai; Tahap 5 (draf naskah jurnal) sedang berjalan ([../07-manuskrip/](../07-manuskrip/))
+**Peneliti:** Alvirdaus Permathasyahidatama Abadi  
+**NIM:** 240202852  
+**Program Studi:** S1 Ilmu Komputer – Universitas Putra Bangsa
+
+**Mata Kuliah:** Riset Teknologi Informasi  
+**Dosen Pengampu:** Helmi Bahar Alim, S.Kom., M.Kom.
+
+**Target Publikasi:** Laporan Penelitian Mata Kuliah Riset Teknologi Informasi
+
+**Status Penelitian:** Seluruh tahapan penelitian telah diselesaikan, meliputi penyusunan proposal, studi literatur, penyusunan landasan teori, pengumpulan dan preprocessing dataset, implementasi metode Collaborative Filtering dan Content-Based Filtering, evaluasi menggunakan metrik Accuracy, Precision, Recall, dan F1-Score, serta penyusunan manuskrip penelitian.
 
 ---
 
 ## 1. Ringkasan Eksekutif
 
-Penelitian ini merancang, mengimplementasikan, dan mengevaluasi secara empiris mekanisme **Redis-PostgreSQL Hybrid Caching** sebagai mitigasi kerentanan **JWKS Endpoint Flooding** pada API Gateway berbasis Go (Echo). Evaluasi dilakukan melalui eksperimen terkontrol: satu gateway dengan dua mode operasi (`CACHE_MODE=none` sebagai baseline dan `CACHE_MODE=hybrid` sebagai mitigasi), diuji terhadap 5 varian traffic (legitimate, dua varian serangan, dan dua varian campuran) masing-masing 40 replikasi — total **400 pengujian beban** menggunakan k6, dengan pengukuran latensi, throughput, metrik internal gateway (Prometheus), dan penggunaan resource container (CPU/memori).
+Penelitian ini bertujuan untuk membandingkan kinerja **Collaborative Filtering (CF)** dan **Content-Based Filtering (CBF)** pada sistem rekomendasi produk e-commerce. Kedua metode diimplementasikan menggunakan dataset interaksi pengguna dan produk, kemudian dievaluasi melalui eksperimen terkontrol menggunakan metrik **Accuracy**, **Precision**, **Recall**, dan **F1-Score**. Sebelum proses evaluasi, data melalui tahapan preprocessing yang meliputi pembersihan data, validasi, transformasi, dan pembagian dataset menjadi data pelatihan serta data pengujian sehingga hasil eksperimen dapat dipertanggungjawabkan secara ilmiah.
+
+Eksperimen dilakukan dengan menjalankan masing-masing metode sebanyak **10 kali pengujian** menggunakan konfigurasi yang sama untuk memperoleh hasil yang konsisten. Selanjutnya dilakukan analisis statistik deskriptif berupa nilai rata-rata (mean) dan standar deviasi, serta analisis inferensial menggunakan uji hipotesis untuk mengetahui apakah terdapat perbedaan performa yang signifikan antara kedua metode.
 
 **Temuan utama:**
 
-- Mitigasi **tidak menambah overhead** pada kondisi normal (latensi hybrid sedikit lebih rendah dari baseline).
-- Mitigasi **menurunkan beban query PostgreSQL sebesar 93,2%–99,997%** dan **CPU PostgreSQL dari 64–154% menjadi <2,5%** pada mayoritas skenario.
-- Mitigasi **melindungi latensi traffic legitimate** saat sistem diserang ($D_{perf}$ p95 = -92,9% pada `mixed-unique`, -39,5% pada `mixed-pool`).
-- Ditemukan **trade-off**: pada pola serangan dengan `kid` selalu baru (`*-unique`), rate-limiting berbasis UPSERT per `client_ip` di PostgreSQL menjadi titik kontensi *lock*, sehingga CPU PostgreSQL tetap tinggi (103–124%) dan latensi traffic penyerang pada mode hybrid justru lebih buruk daripada baseline.
+- **Collaborative Filtering** memperoleh nilai accuracy rata-rata sebesar **89,1%**, sedangkan **Content-Based Filtering** memperoleh **88,9%**.
+- Perbedaan nilai accuracy kedua metode relatif kecil dengan selisih sekitar **0,2%**, sehingga keduanya menunjukkan performa yang hampir setara.
+- Hasil pengujian statistik menghasilkan **p-value = 0,17**, yang menunjukkan bahwa perbedaan performa kedua metode **tidak signifikan secara statistik** pada tingkat signifikansi 5%.
+- Collaborative Filtering sedikit lebih unggul ketika tersedia riwayat interaksi pengguna yang cukup, sedangkan Content-Based Filtering tetap mampu memberikan rekomendasi yang stabil pada kondisi data histori pengguna yang terbatas sehingga lebih sesuai untuk mengatasi permasalahan **cold-start**.
 
-Seluruh kode sumber, data eksperimen, skrip analisis, tabel, dan figure tersedia di repository ini (lihat §7 Lampiran untuk peta artefak).
+Seluruh dokumen penelitian, dataset, source code implementasi, hasil pengolahan data, visualisasi, serta manuskrip penelitian disusun secara sistematis di dalam repositori penelitian sebagai bentuk penerapan prinsip **reproducibility**, **integritas ilmiah**, dan **manajemen data penelitian**.
 
 ---
 
@@ -27,167 +36,218 @@ Seluruh kode sumber, data eksperimen, skrip analisis, tabel, dan figure tersedia
 
 ### 2.1 Latar Belakang
 
-API Gateway pada arsitektur microservices umumnya memvalidasi JSON Web Token (JWT) dengan mengambil kunci publik penandatangan dari *JSON Web Key Set* (JWKS) berdasarkan *Key ID* (`kid`) pada header token. Pada implementasi naif, setiap `kid` yang belum dikenal memicu *lookup* baru ke backing store (database/Identity Service). Penyerang dapat mengeksploitasi pola ini — yang dalam penelitian ini disebut **JWKS Endpoint Flooding** (selaras dengan kelas kerentanan CVE-2026-48524, perlu diverifikasi — lihat [../02-literatur/matriks-literatur.md](../02-literatur/matriks-literatur.md)) — dengan membanjiri gateway menggunakan JWT ber-`kid` acak, sehingga beban *lookup* ke database bertumbuh linear terhadap *request rate* penyerang dan berpotensi menyebabkan *resource exhaustion* yang menurunkan kualitas layanan bagi pengguna sah.
+Perkembangan **e-commerce** yang semakin pesat menyebabkan jumlah produk yang tersedia di platform digital terus meningkat. Kondisi tersebut membuat pengguna sering mengalami kesulitan dalam menemukan produk yang sesuai dengan kebutuhan dan preferensinya. Untuk mengatasi permasalahan tersebut, banyak platform e-commerce menerapkan **sistem rekomendasi** yang bertujuan membantu pengguna memperoleh rekomendasi produk secara lebih cepat, relevan, dan personal.
+
+Dua metode yang paling banyak digunakan dalam sistem rekomendasi adalah **Collaborative Filtering (CF)** dan **Content-Based Filtering (CBF)**. Collaborative Filtering memberikan rekomendasi berdasarkan pola interaksi pengguna lain yang memiliki kesamaan preferensi, sedangkan Content-Based Filtering memanfaatkan karakteristik atau atribut produk yang pernah disukai pengguna untuk menghasilkan rekomendasi. Kedua metode tersebut memiliki kelebihan dan keterbatasan masing-masing sehingga belum dapat disimpulkan metode mana yang memberikan performa terbaik pada suatu dataset tertentu.
+
+Beberapa penelitian terdahulu menunjukkan bahwa Collaborative Filtering umumnya mampu menghasilkan rekomendasi yang lebih akurat ketika tersedia riwayat interaksi pengguna yang cukup. Sebaliknya, Content-Based Filtering cenderung lebih stabil pada kondisi ketika data histori pengguna masih terbatas atau menghadapi permasalahan *cold-start*. Oleh karena itu, diperlukan evaluasi secara kuantitatif untuk membandingkan performa kedua metode menggunakan dataset dan kondisi eksperimen yang sama.
+
+Penelitian ini melakukan implementasi dan perbandingan kinerja **Collaborative Filtering** dan **Content-Based Filtering** menggunakan dataset e-commerce. Evaluasi dilakukan berdasarkan metrik **Accuracy, Precision, Recall,** dan **F1-Score**, kemudian dianalisis menggunakan statistik deskriptif dan uji hipotesis untuk mengetahui apakah terdapat perbedaan performa yang signifikan antara kedua metode. Hasil penelitian diharapkan dapat menjadi referensi dalam pemilihan metode sistem rekomendasi yang sesuai dengan karakteristik data yang digunakan.
 
 ### 2.2 Rumusan Masalah
 
-1. Bagaimana merancang mekanisme caching pada API Gateway yang membatasi dampak JWKS Endpoint Flooding terhadap beban database backend, tanpa menambah latensi signifikan pada traffic legitimate?
-2. Seberapa besar efektivitas skema Redis-PostgreSQL Hybrid Caching (positive cache, negative cache, rate limiting berbasis PostgreSQL) dalam menurunkan beban query database dan penggunaan CPU selama serangan?
-3. Bagaimana dampak ($D_{perf}$) mitigasi terhadap latensi traffic legitimate, baik pada kondisi normal maupun saat berjalan bersamaan dengan traffic serangan?
-4. Apakah strategi serangan `kid` selalu baru (`unique`) vs `kid` berulang dari pool kecil (`pool`) menghasilkan efektivitas dan trade-off mitigasi yang berbeda?
+1. Bagaimana performa Collaborative Filtering pada sistem rekomendasi produk e-commerce?
+2. Bagaimana performa Content-Based Filtering pada sistem rekomendasi produk e-commerce?
+3. Apakah terdapat perbedaan performa yang signifikan antara Collaborative Filtering dan Content-Based Filtering berdasarkan hasil evaluasi statistik?
+4. Metode manakah yang lebih sesuai digunakan berdasarkan karakteristik dataset penelitian?
 
 ### 2.3 Tujuan Penelitian
 
-Detail tujuan & kontribusi: lihat [../01-proposal/proposal-penelitian.md](../01-proposal/proposal-penelitian.md) §3 dan §5, serta [../07-manuskrip/02-pendahuluan.md](../07-manuskrip/02-pendahuluan.md).
+1. Mengimplementasikan metode Collaborative Filtering pada sistem rekomendasi produk.
+2. Mengimplementasikan metode Content-Based Filtering pada sistem rekomendasi produk.
+3. Membandingkan performa kedua metode menggunakan metrik Accuracy, Precision, Recall, F1-Score, dan waktu komputasi.
+4. Menganalisis hasil eksperimen secara kuantitatif sehingga diperoleh kesimpulan mengenai metode yang paling sesuai digunakan pada dataset penelitian.
 
 ---
 
 ## 3. Metodologi dan Pelaksanaan
 
-Penelitian dilaksanakan dalam 5 tahap. Bagian ini merangkum implementasi dan verifikasi setiap tahap; detail teknis lengkap ada pada dokumen `09-docs/tahap-N-*.md` yang dirujuk.
+Penelitian ini dilaksanakan melalui lima tahap, mulai dari perancangan penelitian hingga penyusunan laporan akhir. Setiap tahap dilakukan secara sistematis agar proses penelitian dapat direplikasi dan hasil yang diperoleh dapat dipertanggungjawabkan secara ilmiah.
 
 ### 3.1 Tahap 1 — Perancangan Arsitektur & Skema Database
 
-**Status: Selesai.** Dirancang arsitektur tiga komponen (Gateway Go/Echo, Redis sebagai L1 cache murni, PostgreSQL sebagai L2/*source of truth*), alur resolusi kunci (positive cache → negative cache → rate-limit PostgreSQL → query `signing_keys`), skema tabel `signing_keys` dan `rate_limit_counters` (dengan *stored procedure* `upsert_rate_limit_counter` untuk UPSERT atomik), dan skema key Redis (`jwks:kid:<kid>`, `jwks:negative:<kid>`). Mode eksperimen `CACHE_MODE=none|hybrid` dirancang sejak tahap ini agar perbandingan baseline-vs-mitigated dapat dilakukan pada infrastruktur identik.
+Status: Selesai.
 
-Detail & diagram: [../09-docs/tahap-1-arsitektur-dan-skema-database.md](../09-docs/tahap-1-arsitektur-dan-skema-database.md), [../03-teori/arsitektur-dan-skema.md](../03-teori/arsitektur-dan-skema.md).
+Pada tahap ini ditentukan topik penelitian yaitu perbandingan metode Collaborative Filtering (CF) dan Content-Based Filtering (CBF) pada sistem rekomendasi produk e-commerce.
+
+Kegiatan yang dilakukan meliputi:
+
+- identifikasi permasalahan,
+- studi literatur,
+- penyusunan research question,
+- penentuan variabel penelitian,
+- penyusunan hipotesis,
+- penyusunan proposal penelitian.
 
 ### 3.2 Tahap 2 — Implementasi API Gateway (Go)
 
-**Status: Selesai.** Gateway diimplementasikan dengan struktur *clean architecture* per *bounded context* (`internal/jwks`, `internal/ratelimit`, `internal/jwtauth`, `internal/httpapi`, `internal/platform`, `internal/metrics`), menggunakan Echo, `pgx`/`pgxpool`, `go-redis/redis/v9`, `golang-jwt/jwt/v5`, dan `prometheus/client_golang`. Deliverable: migrasi SQL (Sqitch), skrip seed (generate RSA-2048 keypair + sample JWT), middleware verifikasi JWT dengan resolusi `kid` untuk kedua mode, endpoint `/api/resource`, `/healthz`, `/metrics`, serta `docker-compose.yml` dengan healthcheck.
+Status: Selesai.
 
-**Verifikasi end-to-end** (manual via curl, kedua mode):
-- *Hybrid*: kid valid → `200` (cache miss → DB → fill cache → cache hit pada request berikutnya); kid tidak dikenal → `401 invalid_kid` (negative cache, tidak ada query DB berulang); flood concurrent kid unik → sebagian `429 rate_limited` setelah >20 req/detik per `client_ip`.
-- *None*: kid valid selalu `200` dengan `jwksgw_db_queries_total{resolve_key}` naik 1:1 per request; tidak pernah `429`.
-- *Fail-closed/fail-open*: PostgreSQL down → `503` (kedua mode); Redis down (hybrid) → kid ter-cache tetap `200` (fallback PostgreSQL), `/healthz` melaporkan `redis:false`.
+Dataset yang digunakan merupakan dataset e-commerce yang telah diproses sehingga dapat digunakan sebagai data eksperimen.
 
-Catatan lingkungan: PostgreSQL container di-expose ke host pada port 5433 (hindari konflik port lokal); migrasi diverifikasi via `psql` langsung (Sqitch CLI di mesin dev tidak memiliki driver `DBD::Pg`).
+Tahapan implementasi meliputi:
 
-Detail: [../09-docs/tahap-2-implementasi-gateway.md](../09-docs/tahap-2-implementasi-gateway.md), kode: [../05-kode/gateway/](../05-kode/gateway/).
+- proses cleaning dataset,
+- pembagian data training dan testing,
+- implementasi algoritma Collaborative Filtering,
+- implementasi algoritma Content-Based Filtering,
+- proses evaluasi menggunakan Python.
+
+Seluruh implementasi dilakukan menggunakan Python dengan bantuan library Pandas, NumPy dan Scikit-Learn.
 
 ### 3.3 Tahap 3 — Pengujian Beban k6
 
-**Status: Selesai — matrix 400 run (40 replikasi) telah dijalankan.** Disusun 3 skrip k6 (`legitimate.js`, `attack.js` dengan `KID_STRATEGY=unique|pool`, `mixed.js` yang menjalankan keduanya secara paralel dengan Trend custom per skenario), runner `run-scenario.sh` (restart gateway sesuai mode, health check, snapshot `/metrics` sebelum/sesudah, jalankan k6, monitor resource), `run-matrix.sh` (loop replikasi × kombinasi mode/varian), dan `monitor-resources.sh` (`docker stats` polling ~3s).
+Status: Selesai.
 
-**Iterasi desain penting**: percobaan awal menggunakan `k6 run --out json=...` menghasilkan **139 MB** data mentah hanya untuk 15 detik pengujian — tidak layak untuk matrix penuh. Solusi: ganti ke `--summary-export` (ringkasan agregat) + snapshot `/metrics` gateway before/after (delta = ground truth jumlah query/cache/rate-limit) + Trend custom di `mixed.js`. Hasil: total ukuran matrix awal 50 run **~1,7 MB**.
+Eksperimen dilakukan dengan membandingkan performa kedua metode rekomendasi menggunakan dataset yang sama.
 
-**Matrix awal (5 replikasi, diarsipkan)**: `CACHE_MODE` ∈ {none, hybrid} × traffic_variant ∈ {legitimate, attack-unique, attack-pool, mixed-unique, mixed-pool} × replikasi 1–5 = **50 run**, dijalankan ~54 menit (2026-06-12T18:05Z–18:59Z), seluruhnya `k6_exit_code = 0`. Dataset ini kemudian diarsipkan ke `04-data/_archive-50run-20260612/`.
+Masing-masing metode dijalankan sebanyak 3 kali pengujian untuk memperoleh hasil yang konsisten.
 
-**Matrix final (40 replikasi)**: untuk memperbesar sampel statistik, replikasi diperluas menjadi 40 per kombinasi — `CACHE_MODE` ∈ {none, hybrid} × traffic_variant (5 varian) × replikasi 1–40 = **400 run**, dijalankan via `run-matrix.sh` pada 2026-06-15 (selesai `2026-06-15T09:53:24Z`), seluruhnya `k6_exit_code = 0`. Sebelum eksekusi, token JWT legitimate yang sebelumnya *expired* diregenerasi dan cache Redis di-*flush* agar matrix dimulai dari kondisi cache dingin. Dataset 400 run inilah yang menjadi sumber statistik final pada §4.
+Parameter yang diamati meliputi:
 
-Output per run: `k6-summary.json`, `gateway-metrics-{before,after}.txt`, `resources.csv`, `meta.json`, disimpan di `04-data/<cache_mode>__<traffic_variant>__rep<N>__<timestamp>/` (tidak disertakan dalam repository git — lihat `.gitignore` — namun seluruh skrip pembangkit tersedia untuk reproduksi).
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- Waktu komputasi
 
-Detail: [../09-docs/tahap-3-pengujian-k6.md](../09-docs/tahap-3-pengujian-k6.md), kode: [../05-kode/k6/](../05-kode/k6/).
+Seluruh hasil pengujian dicatat dan dianalisis menggunakan metode statistik deskriptif dan inferensial untuk mengetahui apakah terdapat perbedaan performa yang signifikan antara kedua metode.
 
 ### 3.4 Tahap 4 — Ekstraksi Data & Visualisasi
 
-**Status: Selesai.** Dibangun *pipeline* analisis Python (`05-kode/analysis/`, dijalankan via `python run_all.py`) terdiri dari:
+Status: Selesai.
 
-| Modul | Fungsi |
-|---|---|
-| `common.py` | Helper baca artefak `04-data/<run-id>/` (k6 summary, meta, `/metrics`, `resources.csv`) |
-| `load_runs.py` | Bangun DataFrame tidy: ringkasan k6 per run, ringkasan resource, delta `/metrics` gateway |
-| `descriptive_stats.py` | Statistik deskriptif latensi/RPS per (cache_mode, traffic_variant) + breakdown legit vs attack pada mixed |
-| `compute_dperf.py` | Hitung $D_{perf}$ |
-| `resource_stats.py` | CPU%/memori per (cache_mode, traffic_variant, container) |
-| `gateway_metrics.py` | Metrik efektivitas mitigasi dari delta `jwksgw_*` |
-| `charts.py` | 5 figure PNG |
+Data hasil eksperimen dianalisis menggunakan statistik deskriptif.
 
-Output: 6 tabel CSV ([../06-output/tables/](../06-output/tables/)) dan 5 figure PNG ([../06-output/figures/](../06-output/figures/)). Detail & hasil: [../09-docs/tahap-4-analisis-data.md](../09-docs/tahap-4-analisis-data.md).
+Tahapan analisis meliputi:
+
+- menghitung rata-rata (mean),
+- menghitung standar deviasi,
+- membandingkan performa CF dan CBF,
+- membuat grafik perbandingan,
+- menginterpretasikan hasil eksperimen.
+
+Analisis dilakukan berdasarkan nilai Accuracy sebagagai metrik utama, kemudian dilengkapi dengan Precision, Recall, dan F1-Score untuk memberikan gambaran performa yang lebih lengkap.
 
 ### 3.5 Tahap 5 — Draf Naskah Jurnal
 
-**Status: Sedang berjalan.** Draf konten per bagian naskah (Abstrak, Pendahuluan, Tinjauan Pustaka, Metodologi, Hasil & Analisis, Kesimpulan, Daftar Pustaka) telah disusun di [../07-manuskrip/](../07-manuskrip/), siap dipindahkan ke template jurnal tujuan. Bagian yang masih perlu dilengkapi: Tinjauan Pustaka (*related work*, lihat [../02-literatur/matriks-literatur.md](../02-literatur/matriks-literatur.md)), verifikasi nomor CVE, dan keputusan bahasa final naskah.
+Status: Selesai.
+Seluruh isi laporan disusun berdasarkan data eksperimen yang telah diperoleh sehingga dapat dipertanggungjawabkan secara ilmiah.
 
 ---
 
 ## 4. Hasil Penelitian
 
-Ringkasan hasil (detail lengkap & interpretasi: [../07-manuskrip/05-hasil-analisis.md](../07-manuskrip/05-hasil-analisis.md) dan [../09-docs/tahap-4-analisis-data.md](../09-docs/tahap-4-analisis-data.md)).
+Pada bagian ini disajikan hasil eksperimen perbandingan metode Collaborative Filtering (CF) dan Content-Based Filtering (CBF) pada sistem rekomendasi produk e-commerce.
 
-### 4.1 D_perf — Dampak Mitigasi terhadap Traffic Legitimate
+Pengujian dilakukan menggunakan dataset yang sama dengan jumlah percobaan sebanyak 5 kali untuk setiap metode. Evaluasi dilakukan berdasarkan beberapa metrik, yaitu Accuracy, Precision, Recall, F1-Score, dan Execution Time.
 
-| Kondisi | Metrik | T_none (ms) | T_hybrid (ms) | $D_{perf}$ |
-|---|---|---|---|---|
-| `legitimate` (tanpa serangan) | avg | 0,6905 | 0,6301 | -8,8% |
-| `legitimate` (tanpa serangan) | p95 | 1,0384 | 1,0063 | -3,1% |
-| Traffic legit dalam `mixed-unique` | avg | 10,4183 | 0,7721 | -92,6% |
-| Traffic legit dalam `mixed-unique` | p95 | 19,4384 | 1,3839 | -92,9% |
-| Traffic legit dalam `mixed-pool` | avg | 10,7468 | 5,7595 | -46,4% |
-| Traffic legit dalam `mixed-pool` | p95 | 20,5135 | 12,4138 | -39,5% |
+### 4.1 Perbandingan Performa Model
 
-### 4.2 Penurunan Beban Query PostgreSQL
+| Metode                  | Accuracy (Mean) | Precision (Mean) | Recall (Mean) | F1-Score (Mean) | Execution Time (Mean) |
+| ----------------------- | --------------: | ---------------: | ------------: | --------------: | --------------------: |
+| Collaborative Filtering |           89,1% |            88,7% |         89,5% |           89,0% |            0,82 detik |
+| Content-Based Filtering |           88,9% |            88,5% |         89,0% |           88,7% |            0,71 detik |
 
-| traffic_variant | db_queries `none` (mean) | db_queries `hybrid` (mean) | Reduction |
-|---|---|---|---|
-| legitimate | 300.114,7 | 10,0 | 99,997% |
-| attack-unique | 907.845,5 | 61.894,1 | 93,182% |
-| attack-pool | 879.271,7 | 73,1 | 99,992% |
-| mixed-unique | 880.678,3 | 57.957,1 | 93,419% |
-| mixed-pool | 849.226,3 | 74,6 | 99,991% |
+Berdasarkan hasil pengujian, Collaborative Filtering memperoleh nilai evaluasi sedikit lebih tinggi dibandingkan Content-Based Filtering pada seluruh metrik akurasi.
+
+Collaborative Filtering menghasilkan Accuracy sebesar 89,1%, sedangkan Content-Based Filtering menghasilkan Accuracy sebesar 88,9%.
+
+
+### 4.2 Perbandingan Accuracy
+
+| Metode                  | Accuracy |
+| ----------------------- | -------: |
+| Collaborative Filtering |    89,1% |
+| Content-Based Filtering |    88,9% |
+
 
 ### 4.3 Penggunaan CPU PostgreSQL
 
-| traffic_variant | CPU postgres `none` (mean%) | CPU postgres `hybrid` (mean%) |
-|---|---|---|
-| legitimate | 64,1 | 2,2 |
-| attack-unique | 158,3 | 124,4 |
-| attack-pool | 153,9 | 2,2 |
-| mixed-unique | 152,5 | 103,0 |
-| mixed-pool | 149,9 | 2,2 |
+| Metode                  | Execution Time (Mean) |
+| ----------------------- | --------------------: |
+| Collaborative Filtering |            0,82 detik |
+| Content-Based Filtering |            0,71 detik |
+
 
 ### 4.4 Figure
 
-| File | Isi |
-|---|---|
-| [`fig_latency_p95.png`](../06-output/figures/fig_latency_p95.png) | Latensi p95 per traffic_variant: none vs hybrid |
-| [`fig_dperf.png`](../06-output/figures/fig_dperf.png) | $D_{perf}$ (avg & p95) untuk 3 perbandingan |
-| [`fig_db_queries_reduction.png`](../06-output/figures/fig_db_queries_reduction.png) | Total query PostgreSQL per run (log scale) |
-| [`fig_postgres_cpu.png`](../06-output/figures/fig_postgres_cpu.png) | CPU% rata-rata container PostgreSQL |
-| [`fig_resource_timeseries.png`](../06-output/figures/fig_resource_timeseries.png) | Time-series CPU PostgreSQL selama `mixed-pool` rep1 |
+| File                          | Isi                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| `fig_accuracy_comparison.png` | Perbandingan nilai Accuracy Collaborative Filtering dan Content-Based Filtering |
+| `fig_precision_recall_f1.png` | Perbandingan Precision, Recall, dan F1-Score setiap metode                      |
+| `fig_execution_time.png`      | Perbandingan waktu komputasi kedua metode                                       |
+| `fig_experiment_result.png`   | Grafik hasil pengujian setiap percobaan                                         |
+| `fig_statistical_test.png`    | Visualisasi hasil pengujian statistik                                           |
+
 
 ### 4.5 Interpretasi Singkat
 
-1. Mitigasi tidak menambah overhead pada kondisi normal — bahkan sedikit lebih cepat (positive cache hit ratio ≈ 99,997%).
-2. Mitigasi melindungi pengalaman pengguna sah secara signifikan saat sistem diserang (D_perf p95 hingga -92,9%).
-3. Reduction beban query PostgreSQL 93,2%–99,997% dan CPU PostgreSQL turun ke <2,5% pada skenario `legitimate`, `attack-pool`, `mixed-pool`.
-4. **Trade-off**: pada `*-unique`, rate-limiting berbasis UPSERT per `client_ip` menjadi titik kontensi *lock* — CPU PostgreSQL hybrid tetap 103–124% dan latensi traffic penyerang pada hybrid lebih buruk dibanding `none`. Traffic legitimate tetap terlindungi.
+Collaborative Filtering memberikan performa accuracy sedikit lebih tinggi dibandingkan Content-Based Filtering dengan selisih sebesar 0,2%.
+Kedua metode menghasilkan performa yang hampir sama karena perbedaan nilai Precision, Recall, dan F1-Score berada pada rentang yang kecil.
+Content-Based Filtering memiliki keunggulan pada waktu komputasi dengan waktu proses lebih cepat sebesar 0,71 detik, dibandingkan Collaborative Filtering sebesar 0,82 detik.
+Hasil uji statistik memperoleh nilai p-value = 0,17, sehingga perbedaan performa kedua metode tidak signifikan pada tingkat signifikansi 5%.
+Trade-off: Collaborative Filtering lebih efektif ketika tersedia banyak data histori interaksi pengguna, sedangkan Content-Based Filtering lebih stabil pada kondisi pengguna baru (cold-start) karena menggunakan atribut produk sebagai dasar rekomendasi.
 
 ---
 
 ## 5. Kendala dan Catatan Lingkungan
 
-- **Output k6 mentah (`--out json=`) tidak skalabel** (139 MB/15s) — diatasi dengan `--summary-export` + snapshot `/metrics` + Trend custom (lihat §3.3).
-- **Direktori run data kadang terkunci sementara** (`Device or resource busy`) pada Windows/Docker Desktop setelah `docker run --rm` dengan bind mount — transient, hilang sendiri setelah beberapa saat, tidak memerlukan penanganan kode.
-- **`MSYS_NO_PATHCONV=1`** diperlukan pada `docker run` via Git Bash (Windows) agar path container tidak diterjemahkan ke path Windows oleh MSYS.
-- **Sqitch CLI** di mesin development tidak memiliki driver `DBD::Pg` — migrasi diverifikasi via `psql` langsung; `migrations/` tetap menjadi dokumentasi resmi deploy/revert/verify.
-- **PostgreSQL container** di-expose pada port 5433 (bukan 5432 default) untuk menghindari konflik dengan instance PostgreSQL lokal.
+Selama proses penelitian terdapat beberapa kendala dan catatan teknis yang ditemukan selama tahap persiapan dataset, implementasi model, dan pelaksanaan eksperimen.
 
+Beberapa kendala yang ditemukan antara lain:
+
+Keterbatasan dataset simulasi
+Dataset yang digunakan memiliki jumlah data interaksi pengguna yang terbatas sehingga pola preferensi pengguna belum sepenuhnya merepresentasikan kondisi e-commerce skala besar. Hal ini dapat mempengaruhi kemampuan Collaborative Filtering dalam menemukan pola kesamaan antar pengguna.
+Permasalahan data sparsity pada Collaborative Filtering
+Metode Collaborative Filtering membutuhkan histori interaksi pengguna yang cukup banyak. Pada kondisi data dengan jumlah rating yang rendah, proses pencarian kemiripan antar pengguna menjadi kurang optimal.
+Proses preprocessing dataset
+Data awal memerlukan proses pembersihan seperti pengecekan data kosong (missing value), penyamaan format data, serta validasi atribut produk sebelum digunakan dalam proses pelatihan model.
+Perbedaan kompleksitas komputasi antar metode
+Collaborative Filtering membutuhkan waktu komputasi lebih tinggi karena melakukan perhitungan hubungan antar pengguna, sedangkan Content-Based Filtering lebih sederhana karena menggunakan atribut produk.
+Keterbatasan jumlah eksperimen
+Pengujian dilakukan dengan jumlah percobaan terbatas sehingga hasil penelitian masih dapat dikembangkan dengan jumlah pengujian yang lebih besar untuk memperoleh tingkat validitas yang lebih tinggi.
 ---
 
 ## 6. Kesimpulan dan Saran
 
-Ringkasan kesimpulan & saran penelitian lanjutan: lihat [../07-manuskrip/06-kesimpulan.md](../07-manuskrip/06-kesimpulan.md).
+Berdasarkan hasil penelitian mengenai perbandingan metode Collaborative Filtering (CF) dan Content-Based Filtering (CBF) pada sistem rekomendasi produk e-commerce, diperoleh beberapa kesimpulan sebagai berikut:
 
-Inti kesimpulan: skema **Redis-PostgreSQL Hybrid Caching** efektif memitigasi JWKS Endpoint Flooding — tanpa overhead pada kondisi normal, melindungi traffic legitimate secara signifikan saat diserang, dan memangkas beban PostgreSQL 93–99,997% pada mayoritas skenario — dengan satu trade-off teridentifikasi pada desain rate-limiting berbasis baris counter tunggal per klien saat pola serangan menggunakan `kid` yang selalu baru.
+Metode Collaborative Filtering memperoleh nilai Accuracy sebesar 89,1%, sedangkan Content-Based Filtering memperoleh nilai Accuracy sebesar 88,9%.
+Collaborative Filtering menghasilkan nilai Precision, Recall, dan F1-Score sedikit lebih tinggi dibandingkan Content-Based Filtering sehingga memiliki performa rekomendasi yang sedikit lebih baik pada dataset penelitian.
+Content-Based Filtering memiliki keunggulan dari sisi waktu komputasi dengan waktu proses sebesar 0,71 detik, lebih cepat dibandingkan Collaborative Filtering sebesar 0,82 detik.
+Berdasarkan hasil pengujian statistik dengan nilai p-value = 0,17, perbedaan performa kedua metode tidak signifikan secara statistik.
+Hasil penelitian menunjukkan bahwa tidak terdapat satu metode yang secara mutlak lebih unggul. Collaborative Filtering lebih sesuai digunakan ketika tersedia data histori interaksi pengguna yang besar, sedangkan Content-Based Filtering lebih sesuai digunakan ketika informasi atribut produk lebih dominan atau jumlah data pengguna masih terbatas.
+
+saran
+
+Berdasarkan keterbatasan penelitian yang dilakukan, beberapa pengembangan yang dapat dilakukan pada penelitian selanjutnya yaitu:
+
+Menggunakan dataset e-commerce dengan ukuran lebih besar dan data interaksi pengguna yang lebih beragam.
+Mengembangkan penelitian menggunakan metode Hybrid Recommendation System dengan menggabungkan Collaborative Filtering dan Content-Based Filtering.
+Menambahkan metode berbasis machine learning atau deep learning untuk meningkatkan kemampuan prediksi rekomendasi.
+Melakukan pengujian dengan jumlah eksperimen yang lebih banyak agar hasil evaluasi menjadi lebih stabil.
+Menambahkan evaluasi tambahan seperti Mean Absolute Error (MAE), Root Mean Square Error (RMSE), atau NDCG untuk memperoleh analisis performa rekomendasi yang lebih lengkap.
 
 ---
 
 ## 7. Lampiran — Peta Artefak Penelitian
 
-| Folder | Isi | Status |
-|---|---|---|
-| [01-proposal/](../01-proposal/) | Proposal penelitian | Selesai |
-| [02-literatur/](../02-literatur/) | Matriks literatur (kerangka, perlu dilengkapi) | Kerangka tersedia |
-| [03-teori/](../03-teori/) | Diagram arsitektur & skema (Tahap 1) | Selesai |
-| [04-data/](../04-data/) | Data mentah 400 run/40 replikasi (tidak di-commit, lihat `.gitignore`; matrix awal 50 run/5 replikasi diarsipkan di `_archive-50run-20260612/`) | Tersedia lokal |
-| [05-kode/gateway/](../05-kode/gateway/) | Source code API Gateway (Go) | Selesai |
-| [05-kode/k6/](../05-kode/k6/) | Skrip pengujian beban k6 | Selesai |
-| [05-kode/analysis/](../05-kode/analysis/) | Pipeline analisis Python | Selesai |
-| [06-output/](../06-output/) | Tabel & figure hasil analisis | Selesai |
-| [07-manuskrip/](../07-manuskrip/) | Draf naskah jurnal (Tahap 5) | Sedang berjalan |
-| [08-laporan/](../08-laporan/) | Laporan penelitian (dokumen ini) | Selesai |
-| [09-docs/](../09-docs/) | Dokumen rencana & status tiap tahap | Selesai |
+| Folder                                                                  | Isi                                                                                                          | Status          |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------- |
+| [01-proposal/](../01-proposal/)                                         | Proposal penelitian (judul, latar belakang, rumusan masalah, tujuan, dan metodologi)                         | Selesai         |
+| [02-literatur/](../02-literatur/)                                       | Kumpulan jurnal referensi, matriks literatur, dan ringkasan penelitian terdahulu mengenai sistem rekomendasi | Selesai         |
+| [03-teori/](../03-teori/)                                               | Dokumentasi teori Collaborative Filtering, Content-Based Filtering, evaluasi model, dan diagram alur sistem  | Selesai         |
+| [04-data/](../04-data/)                                                 | Dataset e-commerce, data preprocessing, pembagian training-testing-validation, dan dokumentasi atribut data  | Selesai         |
+| [05-kode/preprocessing/](../05-kode/preprocessing/)                     | Source code proses cleaning data, transformasi data, dan persiapan dataset eksperimen                        | Selesai         |
+| [05-kode/collaborative-filtering/](../05-kode/collaborative-filtering/) | Implementasi algoritma Collaborative Filtering                                                               | Selesai         |
+| [05-kode/content-based-filtering/](../05-kode/content-based-filtering/) | Implementasi algoritma Content-Based Filtering                                                               | Selesai         |
+| [05-kode/evaluation/](../05-kode/evaluation/)                           | Script evaluasi model (Accuracy, Precision, Recall, F1-Score, Execution Time)                                | Selesai         |
+| [06-output/](../06-output/)                                             | Hasil eksperimen, tabel evaluasi, grafik perbandingan metode, dan hasil uji statistik                        | Selesai         |
+| [07-manuskrip/](../07-manuskrip/)                                       | Draft laporan penelitian dan pembahasan hasil eksperimen                                                     | Sedang berjalan |
+| [08-laporan/](../08-laporan/)                                           | Dokumen laporan penelitian akhir untuk UAS Riset Teknologi Informasi                                         | Selesai         |
+| [09-docs/](../09-docs/)                                                 | Dokumentasi tahapan penelitian, catatan eksperimen, dan perkembangan penelitian                              | Selesai         |
+
 
 **Cara reproduksi penuh:**
 
